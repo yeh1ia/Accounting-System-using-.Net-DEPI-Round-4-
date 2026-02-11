@@ -9,7 +9,7 @@ This application follows a clean, layered architecture pattern to ensure maintai
 ```
 ┌─────────────────────────────────────────────────────────┐
 │              Presentation Layer (Web App)               │
-│        Blazor/ASP.NET MVC - Web Interface              │
+│        ASP.NET MVC - Web Interface              │
 └─────────────────────────────────────────────────────────┘
                            ↓
 ┌─────────────────────────────────────────────────────────┐

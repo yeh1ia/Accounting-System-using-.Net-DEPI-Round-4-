@@ -1,5 +1,3 @@
-# Accounting-System-using-.Net-DEPI-Round-4
-
 # .NET Accounting System
 
 A comprehensive web-based accounting system built with .NET, featuring a modern layered architecture designed for enterprise-grade financial management.

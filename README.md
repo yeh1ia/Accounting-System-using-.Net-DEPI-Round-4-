@@ -361,10 +361,10 @@ Please ensure your code follows our coding standards and includes appropriate te
 ## 👥 Team
 
 - Project Lead: Yehia Fargaly
-- Team Member:
-- Team Member:
-- Team Member:
-- Team Member:
+- Team Member:  Ahmed Ouda
+- Team Member:  Ahmed Emad
+- Team Member:  Ali Mohamed
+- Team Member:  Eman Ibrahim
 
 ## 📞 Support
 

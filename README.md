@@ -362,10 +362,11 @@ Please ensure your code follows our coding standards and includes appropriate te
 
 ## 👥 Team
 
-- Project Lead: [Your Name]
-- Backend Development: [Team Member]
-- Frontend Development: [Team Member]
-- Database Architecture: [Team Member]
+- Project Lead: Yehia Fargaly
+- Team Member:
+- Team Member:
+- Team Member:
+- Team Member:
 
 ## 📞 Support
 

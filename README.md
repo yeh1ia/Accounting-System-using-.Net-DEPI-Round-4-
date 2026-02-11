@@ -110,12 +110,12 @@ Supporting Libraries:
 - **Validation**: FluentValidation for business rule enforcement
 
 ### Frontend
-- **UI Framework**: Blazor / ASP.NET MVC
+- **UI Framework**: ASP.NET MVC
 - **Styling**: Bootstrap 5 / Tailwind CSS
 - **JavaScript**: Modern ES6+ for interactive components
 
 ### Database
-- **Primary**: SQL Server / PostgreSQL
+- **Primary**: SQL Server
 - **Features**: 
   - Tables, Views, and Stored Procedures
   - Automatic Migrations

@@ -9,7 +9,7 @@ This application follows a clean, layered architecture pattern to ensure maintai
 ```
 ┌─────────────────────────────────────────────────────────┐
 │              Presentation Layer (Web App)               │
-│        ASP.NET MVC - Web Interface              │
+│              ASP.NET MVC - Web Interface                │
 └─────────────────────────────────────────────────────────┘
                            ↓
 ┌─────────────────────────────────────────────────────────┐
@@ -19,8 +19,8 @@ This application follows a clean, layered architecture pattern to ensure maintai
                            ↓
 ┌─────────────────────────────────────────────────────────┐
 │        Business Logic Layer (Core Application)          │
-│  GL | AP | AR | Bank Rec | Fixed Assets | Inventory    │
-│  Reports | Tax | Budgeting | Audit | Multi-Currency    │
+│  GL | AP | AR | Bank Rec | Fixed Assets | Inventory     │
+│  Reports | Tax | Budgeting | Audit | Multi-Currency     │
 └─────────────────────────────────────────────────────────┘
                            ↓
 ┌─────────────────────────────────────────────────────────┐
@@ -29,8 +29,8 @@ This application follows a clean, layered architecture pattern to ensure maintai
 └─────────────────────────────────────────────────────────┘
                            ↓
 ┌─────────────────────────────────────────────────────────┐
-│                    Database Layer                        │
-│           SQL Server / PostgreSQL                        │
+│                    Database Layer                       │
+│                      SQL Server                         │
 └─────────────────────────────────────────────────────────┘
 
 Supporting Libraries:

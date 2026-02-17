@@ -1,404 +1,77 @@
 # .NET Accounting System
 
-A comprehensive web-based accounting system built with .NET, featuring a modern layered architecture designed for enterprise-grade financial management.
+---
 
-## 🏗️ Architecture Overview
+## Project Idea
 
-This application follows a clean, layered architecture pattern to ensure maintainability, scalability, and separation of concerns:
-
-```
-┌─────────────────────────────────────────────────────────┐
-│              Presentation Layer (Web App)               │
-│              ASP.NET MVC - Web Interface                │
-└─────────────────────────────────────────────────────────┘
-                           ↓
-┌─────────────────────────────────────────────────────────┐
-│           API Layer (ASP.NET Core Web API)              │
-│    Controllers | Authentication/JWT | Validation        │
-└─────────────────────────────────────────────────────────┘
-                           ↓
-┌─────────────────────────────────────────────────────────┐
-│        Business Logic Layer (Core Application)          │
-│  GL | AP | AR | Bank Rec | Fixed Assets | Inventory     │
-│  Reports | Tax | Budgeting | Audit | Multi-Currency     │
-└─────────────────────────────────────────────────────────┘
-                           ↓
-┌─────────────────────────────────────────────────────────┐
-│      Data Access Layer (Entity Framework Core)          │
-│   Repository Pattern | Unit of Work | DbContext         │
-└─────────────────────────────────────────────────────────┘
-                           ↓
-┌─────────────────────────────────────────────────────────┐
-│                    Database Layer                       │
-│                      SQL Server                         │
-└─────────────────────────────────────────────────────────┘
-
-Supporting Libraries:
-├── Reporting Library (.NET) - QuestPDF/iTextSharp + CsvHelper
-├── External Integrations - Payment Gateways, Banking APIs
-└── Security & Authentication - JWT + Identity Server
-```
-
-## ✨ Features
-
-### Core Accounting Modules
-
-#### General Ledger
-- **Chart of Accounts** - Hierarchical account structure with customizable account types
-- **Journal Entries** - Manual and automated posting capabilities
-- **Account Reconciliation** - Period-end closing and reconciliation workflows
-
-#### Accounts Payable (AP)
-- **Vendor Management** - Comprehensive vendor database with contact information
-- **Invoice Processing** - Purchase order matching and three-way matching
-- **Payment Processing** - Batch payments and payment scheduling
-
-#### Accounts Receivable (AR)
-- **Customer Management** - Customer profiles with credit limits and terms
-- **Invoicing** - Automated invoice generation and customizable templates
-- **Collections** - Aging reports and automated payment reminders
-
-#### Bank Reconciliation
-- **Transaction Matching** - Automated matching of bank statements
-- **Reconciliation Reports** - Detailed reconciliation history and audit trails
-
-#### Fixed Assets
-- **Asset Tracking** - Complete asset lifecycle management
-- **Depreciation** - Multiple depreciation methods (Straight-line, Declining balance, etc.)
-- **Asset Disposal** - Automated gain/loss calculations
-
-#### Inventory
-- **Stock Management** - Real-time inventory tracking with multiple locations
-- **Valuation Methods** - FIFO, LIFO, and Weighted Average costing
-- **Reorder Management** - Automated reorder points and purchase suggestions
-
-### Financial Management
-
-#### Financial Reports
-- **Profit & Loss Statement** - Comprehensive income statements with drill-down capability
-- **Balance Sheet** - Real-time balance sheet with comparative periods
-- **Cash Flow Statement** - Operating, investing, and financing activities
-- **Custom Reports** - Flexible report builder with PDF and CSV export options
-
-#### Tax Management
-- **VAT/Sales Tax** - Automated tax calculations and compliance reporting
-- **Tax Returns** - Period-based tax return preparation
-- **Multi-jurisdiction** - Support for multiple tax authorities and rates
-
-#### Budgeting
-- **Budget Planning** - Annual and departmental budget creation
-- **Budget Analysis** - Variance analysis and performance tracking
-- **Forecasting** - Rolling forecasts with scenario planning
-
-#### Audit Trail
-- **History Tracking** - Complete audit trail for all transactions
-- **User Activity Logs** - Detailed logging of all system activities
-- **Compliance Reports** - Regulatory compliance and audit reports
-
-#### Multi-Currency
-- **Exchange Rates** - Automated exchange rate updates
-- **Foreign Currency Transactions** - Multi-currency support for AR/AP
-- **Revaluation** - Automatic foreign currency revaluation
-
-## 🛠️ Technology Stack
-
-### Backend
-- **Framework**: ASP.NET Core 8.0
-- **API**: ASP.NET Core Web API with RESTful design
-- **ORM**: Entity Framework Core
-- **Authentication**: JWT (JSON Web Tokens) with role-based access control
-- **Validation**: FluentValidation for business rule enforcement
-
-### Frontend
-- **UI Framework**: ASP.NET MVC
-- **Styling**: Bootstrap 5 / Tailwind CSS
-- **JavaScript**: Modern ES6+ for interactive components
-
-### Database
-- **Primary**: SQL Server
-- **Features**: 
-  - Tables, Views, and Stored Procedures
-  - Automatic Migrations
-  - Backup & Recovery strategies
-
-### External Integrations
-- **Payment Gateways**: Integration with major payment processors
-- **Banking APIs**: Automated bank feed integration
-- **Tax Services**: Tax calculation and filing services via APIs
-- **Email/SMS**: Notification services for alerts and reminders
-
-### Security & Authentication
-- **JWT Tokens**: Secure token-based authentication
-- **Role-Based Access**: Granular permission system
-- **Identity Server**: Centralized authentication and authorization
-- **Data Encryption**: Sensitive data encryption at rest and in transit
-
-### Reporting & Analytics
-- **QuestPDF / iTextSharp**: PDF report generation library
-- **CsvHelper**: CSV file generation and export
-- **Custom Report Engine**: Built-in report templates and formatting
-- **Export Capabilities**: PDF and CSV export for all financial reports
-
-## 🚀 Getting Started
-
-### Prerequisites
-
-```bash
-- .NET 8.0 SDK or later
-- SQL Server 2019+ or PostgreSQL 13+
-- Node.js 18+ (for frontend assets)
-- Visual Studio 2022 or VS Code
-```
-
-### Installation
-
-1. **Clone the repository**
-```bash
-git clone [https://github.com/yourusername/dotnet-accounting-system.git](https://github.com/yeh1ia/Accounting-System-using-.Net-DEPI-Round-4-)
-cd dotnet-accounting-system
-```
-
-2. **Configure the database connection**
-
-Edit `appsettings.json` in the API project:
-```json
-{
-  "ConnectionStrings": {
-    "DefaultConnection": "Server=localhost;Database=AccountingDB;Trusted_Connection=True;"
-  }
-}
-```
-
-3. **Run database migrations**
-```bash
-cd src/DataAccessLayer
-dotnet ef database update
-```
-
-4. **Build the solution**
-```bash
-dotnet build
-```
-
-5. **Install reporting libraries** (if not already included)
-```bash
-# For PDF generation
-dotnet add package QuestPDF
-# OR
-dotnet add package iTextSharp.LGPLv2.Core
-
-# For CSV export
-dotnet add package CsvHelper
-```
-
-6. **Run the application**
-```bash
-cd src/PresentationLayer
-dotnet run
-```
-
-The application will be available at `https://localhost:5001`
-
-### Default Credentials
-
-```
-Username: admin@accounting.com
-Password: Admin@123
-```
-
-**⚠️ Important**: Change the default credentials immediately after first login.
-
-## 📁 Project Structure
-
-```
-├── src/
-│   ├── PresentationLayer/          # Web UI (Blazor/MVC)
-│   │   ├── Controllers/
-│   │   ├── Views/
-│   │   ├── wwwroot/
-│   │   └── Program.cs
-│   │
-│   ├── ApiLayer/                   # REST API
-│   │   ├── Controllers/
-│   │   ├── Middleware/
-│   │   ├── Authentication/
-│   │   └── Validation/
-│   │
-│   ├── BusinessLogicLayer/         # Core Application
-│   │   ├── Services/
-│   │   │   ├── GeneralLedger/
-│   │   │   ├── AccountsPayable/
-│   │   │   ├── AccountsReceivable/
-│   │   │   ├── Banking/
-│   │   │   ├── FixedAssets/
-│   │   │   ├── Inventory/
-│   │   │   ├── Reports/
-│   │   │   ├── Tax/
-│   │   │   └── Budgeting/
-│   │   ├── Models/
-│   │   └── Interfaces/
-│   │
-│   ├── ReportingLibrary/           # Report Generation
-│   │   ├── PdfGenerator/
-│   │   │   ├── Templates/
-│   │   │   ├── FinancialReports/
-│   │   │   └── Formatters/
-│   │   ├── CsvExporter/
-│   │   │   ├── ExportServices/
-│   │   │   └── Mappings/
-│   │   └── Interfaces/
-│   │
-│   ├── DataAccessLayer/            # Data Access
-│   │   ├── Context/
-│   │   ├── Repositories/
-│   │   ├── UnitOfWork/
-│   │   └── Migrations/
-│   │
-│   └── DatabaseLayer/              # Database Scripts
-│       ├── Tables/
-│       ├── Views/
-│       ├── StoredProcedures/
-│       └── Seeds/
-│
-├── tests/
-│   ├── UnitTests/
-│   ├── IntegrationTests/
-│   └── E2ETests/
-│
-└── docs/
-    ├── API.md
-    ├── UserGuide.md
-    └── DeveloperGuide.md
-```
-
-## 🔐 Security Features
-
-- **JWT Authentication**: Secure token-based authentication with refresh tokens
-- **Role-Based Authorization**: Fine-grained permission system
-- **Data Encryption**: Sensitive data encrypted using AES-256
-- **SQL Injection Protection**: Parameterized queries and ORM security
-- **XSS Protection**: Input sanitization and output encoding
-- **CSRF Protection**: Anti-forgery tokens on all forms
-- **Audit Logging**: Comprehensive audit trail for compliance
-- **Password Policies**: Strong password requirements and periodic rotation
-
-## 📊 API Documentation
-
-RESTful API endpoints are available for third-party integrations:
-
-- **Authentication**: `/api/auth/*`
-- **General Ledger**: `/api/gl/*`
-- **Accounts Payable**: `/api/ap/*`
-- **Accounts Receivable**: `/api/ar/*`
-- **Inventory**: `/api/inventory/*`
-- **Reports**: `/api/reports/*`
-
-Full API documentation is available at `/swagger` when running in development mode.
-
-## 🧪 Testing
-
-Run the test suite:
-
-```bash
-# Unit tests
-dotnet test tests/UnitTests/
-
-# Integration tests
-dotnet test tests/IntegrationTests/
-
-# All tests
-dotnet test
-```
-
-## 📈 Performance Optimization
-
-- **Caching**: Redis/Memory caching for frequently accessed data
-- **Database Indexing**: Optimized indexes on critical tables
-- **Lazy Loading**: Efficient data loading strategies
-- **Pagination**: Server-side pagination for large datasets
-- **Async Operations**: Asynchronous processing for long-running tasks
-- **Query Optimization**: Stored procedures for complex operations
-
-## 🌐 Deployment
-
-### IIS Deployment
-
-1. Publish the application:
-```bash
-dotnet publish -c Release -o ./publish
-```
-
-2. Configure IIS application pool (.NET CLR Version: No Managed Code)
-3. Deploy the published files to IIS wwwroot
-4. Configure the database connection string in web.config
-
-### Docker Deployment
-
-```bash
-docker build -t accounting-system .
-docker run -p 8080:80 accounting-system
-```
-
-### Cloud Deployment
-
-The application is ready for deployment to:
-- Azure App Service
-- AWS Elastic Beanstalk
-- Google Cloud Platform
-
-## 🤝 Contributing
-
-We welcome contributions! Please follow these steps:
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-Please ensure your code follows our coding standards and includes appropriate tests.
-
-## 👥 Team
-
-- Project Lead: Yehia Fargaly
-- Team Member:  Ahmed Ouda
-- Team Member:  Ahmed Emad
-- Team Member:  Ali Mohamed
-- Team Member:  Eman Ibrahim
-
-## 📞 Support
-
-For support and questions:
-- **Email**: support@accountingsystem.com
-- **Documentation**: [Wiki](https://github.com/yourusername/dotnet-accounting-system/wiki)
-- **Issues**: [GitHub Issues](https://github.com/yourusername/dotnet-accounting-system/issues)
-
-## 🗺️ Roadmap
-
-### Version 2.0 (Planned)
-- [ ] Mobile app (Xamarin/MAUI)
-- [ ] Advanced AI-powered forecasting
-- [ ] Blockchain integration for audit trail
-- [ ] Enhanced multi-company support
-- [ ] GraphQL API support
-- [ ] Real-time collaboration features
-
-### Version 1.5 (In Progress)
-- [x] Bank feed automation
-- [x] Multi-currency support
-- [ ] Advanced reporting dashboards
-- [ ] Automated reconciliation
-
-## 📚 Additional Resources
-
-- [User Guide](docs/UserGuide.md)
-- [Developer Guide](docs/DeveloperGuide.md)
-- [API Documentation](docs/API.md)
-- [Database Schema](docs/DatabaseSchema.md)
-- [Deployment Guide](docs/Deployment.md)
+A full-featured web-based accounting system built with ASP.NET Core, designed to help businesses manage their financial operations efficiently. The system handles the complete accounting cycle — from journal entries and general ledger to invoicing, bank reconciliation, tax management, budgeting, and multi-currency support. It is built on a clean layered architecture (Presentation → API → Business Logic → Data Access → Database) and includes a dedicated .NET Reporting Library that generates professional PDF reports and CSV exports using QuestPDF and CsvHelper, eliminating the need for any third-party reporting platforms.
 
 ---
 
-**Built with ❤️ using .NET Core**
+## Team Members
 
-⭐ Star this repository if you find it helpful!
+• Yehia Fargaly – Project Leader  
+• Ahmed Ouda 
+• Ahmed Emad
+• Ali Mohamed  
+• Eman Ibrahim  
+
+---
+
+## Project Plan
+
+1. Research & Analysis
+   - Audience personas: Small-to-medium business owners, accountants, finance managers, and auditors who need a centralized system to track financial transactions, generate reports, and ensure compliance
+
+2. Visual Identity
+   - Logo design: A clean, professional logo using navy blue and green tones to reflect trust and financial growth, incorporating a ledger or chart symbol
+
+3. Main Designs
+   - Poster: A system architecture poster showcasing the five-layer structure, key modules (GL, AP, AR, Inventory, Reporting), and the technology stack used
+
+4. Complementary Products
+   - .NET Reporting Library (PDF & CSV) — standalone library built with QuestPDF and CsvHelper, reusable across projects
+   - REST API documentation via Swagger for third-party integrations
+   - Admin dashboard for real-time financial monitoring
+
+5. Review & Finalization
+   - Full code review across all layers
+   - Security audit: JWT validation, role-based access, and data encryption checks
+   - Performance testing: load testing API endpoints and report generation
+   - User acceptance testing (UAT) with sample accounting scenarios
+
+6. Final Presentation
+   - Live demo of the web application covering the full accounting workflow
+   - Architecture walkthrough with the layered diagram
+   - Reporting Library demo: generating a PDF balance sheet and CSV transaction export
+   - Q&A session with the instructor and evaluators
+
+---
+
+## Roles & Responsibilities
+
+• Yehia Fargaly – Project Lead, Architecture Design, Backend Development  
+• Ahmed Ouda – Business Logic & Accounting Modules Implementation  
+• Ahmed Emad – API Development & Integration  
+• Ali Mohamed – Database Design & Optimization  
+• Eman Ibrahim – UI/UX & Documentation  
+
+
+---
+
+## KPIs (Key Performance Indicators)
+*Metrics for project success (e.g., response time, system uptime, user adoption rate).*
+
+- **API Response Time** — Average response under 300ms for all endpoints
+- **System Uptime** — 99.5% availability during the project evaluation period
+- **User Adoption Rate** — All 3 test users onboarded and able to complete core workflows within the first session
+- **Report Generation Time** — PDF and CSV files generated in under 5 seconds for up to 1,000 records
+- **Test Coverage** — Minimum 80% unit test coverage across the Business Logic and Data Access layers
+- **Bug Rate** — Zero critical bugs and fewer than 5 minor issues at the time of final presentation
+- **Page Load Time** — All pages load within 2 seconds on a standard connection
+
+---
+
+## Instructor
+
+* Eng. Ashraf Sadek

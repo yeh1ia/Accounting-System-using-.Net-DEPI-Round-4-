@@ -11,9 +11,13 @@ A full-featured web-based accounting system built with ASP.NET Core, designed to
 ## Team Members
 
 • Yehia Fargaly – Project Leader  
+
 • Ahmed Ouda 
+
 • Ahmed Emad
+
 • Ali Mohamed  
+
 • Eman Ibrahim  
 
 ---
@@ -73,5 +77,4 @@ A full-featured web-based accounting system built with ASP.NET Core, designed to
 ---
 
 ## Instructor
-
 * Eng. Ashraf Sadek

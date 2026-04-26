@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="Accounting.Data/Accounting.Data.csproj" Id="bf9da8df-762b-4f25-ad39-7ada4ea07668" />
+  <Project Path="Accounting.Services/Accounting.Services.csproj" Id="c84e195f-dc2b-487d-b1a1-85980f0ba4fc" />
+  <Project Path="AccountingSystem/Accounting.Web.csproj" />
+</Solution>

@@ -4,63 +4,40 @@
 
 ## Project Idea
 
-A full-featured web-based accounting system built with ASP.NET Core, designed to help businesses manage their financial operations efficiently. The system handles the complete accounting cycle — from journal entries and general ledger to invoicing, bank reconciliation, tax management, budgeting, and multi-currency support. It is built on a clean layered architecture (Presentation → API → Business Logic → Data Access → Database) and includes a dedicated .NET Reporting Library that generates professional PDF reports and CSV exports using QuestPDF and CsvHelper, eliminating the need for any third-party reporting platforms.
+LedgerCore is a web‑based double‑entry accounting system built with ASP.NET Core MVC. It helps small to medium‑sized businesses manage their general ledger, accounts payable (vendor bills), and accounts receivable (customer invoices). The system ensures every journal entry is balanced (debits = credits) and provides real‑time financial reports: Trial Balance, Income Statement, and Balance Sheet.
+The solution follows N‑Tier architecture with three separate projects:
+
+- Accounting.Data – Domain models, DbContext, Identity, Migrations
+- Accounting.Services – Business logic, validation, reporting services
+- Accounting.Web – Controllers, Views, ViewModels, static files
 
 ---
 
 ## Team Members
 
-1- Yehia Fargaly 
-2- Ahmed Ouda 
+1- Yehia Fargaly
+2- Ahmed Ouda
 3- Ahmed Emad
 4- Ali Mohamed  
-5- Eman Ibrahim  
-
----
-
-## Project Plan
-
-1. Research & Analysis
-   - Audience personas: Small-to-medium business owners, accountants, finance managers, and auditors who need a centralized system to track financial transactions, generate reports, and ensure compliance
-
-2. Visual Identity
-   - Logo design: A clean, professional logo using navy blue and green tones to reflect trust and financial growth, incorporating a ledger or chart symbol
-
-3. Main Designs
-   - Poster: A system architecture poster showcasing the five-layer structure, key modules (GL, AP, AR, Inventory, Reporting), and the technology stack used
-
-4. Complementary Products
-   - .NET Reporting Library (PDF & CSV) — standalone library built with QuestPDF and CsvHelper, reusable across projects
-   - REST API documentation via Swagger for third-party integrations
-   - Admin dashboard for real-time financial monitoring
-
-5. Review & Finalization
-   - Full code review across all layers
-   - Security audit: JWT validation, role-based access, and data encryption checks
-   - Performance testing: load testing API endpoints and report generation
-   - User acceptance testing (UAT) with sample accounting scenarios
-
-6. Final Presentation
-   - Live demo of the web application covering the full accounting workflow
-   - Architecture walkthrough with the layered diagram
-   - Reporting Library demo: generating a PDF balance sheet and CSV transaction export
-   - Q&A session with the instructor and evaluators
-
----
+5- Eman Ibrahim
 
 ## Roles & Responsibilities
 
-• Yehia Fargaly – Project Lead, Architecture Design, Backend Development  
-• Ahmed Ouda – Business Logic & Accounting Modules Implementation  
-• Ahmed Emad – API Development & Integration  
-• Ali Mohamed – Database Design & Optimization  
-• Eman Ibrahim – UI/UX & Documentation  
+• Yehia Fargaly – Project Lead, Accounts Payable, User Management.
+• Ahmed Ouda –  
+• Ahmed Emad –
+• Ali Mohamed –
+• Eman Ibrahim – N‑Tier setup, Authentication, Entities Designer, Chart of Accounts, Dashboard.
 
+---
+
+Journal Entries/Categories/Currencies/Accounts Receivable/Contacts/Reporting & Exports.
 
 ---
 
 ## KPIs (Key Performance Indicators)
-*Metrics for project success (e.g., response time, system uptime, user adoption rate).*
+
+_Metrics for project success (e.g., response time, system uptime, user adoption rate)._
 
 - **API Response Time** — Average response under 300ms for all endpoints
 - **System Uptime** — 99.5% availability during the project evaluation period
@@ -73,4 +50,6 @@ A full-featured web-based accounting system built with ASP.NET Core, designed to
 ---
 
 ## Instructor
-* Eng. Ashraf Sadek
+
+- Eng. Ashraf Sadek
+  Digital Egypt Builders Initiative & YAT Learning Solutions

@@ -1,0 +1,35 @@
+# Build outputs
+bin/
+obj/
+out/
+
+# Visual Studio / IDE
+.vs/
+*.user
+*.suo
+*.cache
+*.csproj.user
+
+# Runtime / debug files
+*.deps.json
+*.dll
+*.exe
+*.pdb
+*.runtimeconfig.json
+*.staticwebassets.*
+
+# NuGet
+packages/
+*.nupkg
+project.assets.json
+project.nuget.cache
+*.nuget.g.props
+*.nuget.g.targets
+
+# Node / frontend
+node_modules/
+wwwroot/lib/   
+
+# Compressed static web assets (those GUID‑named .gz files)
+**/compressed/*.gz
+*.up2date

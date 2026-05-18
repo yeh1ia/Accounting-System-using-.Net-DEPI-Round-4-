@@ -2,30 +2,35 @@
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Nullable>enable</Nullable>
+    <Nullable>disable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.7" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.7">
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="10.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Accounting.Services\Accounting.Services.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Controllers\Accounting\" />
     <Folder Include="Controllers\Sales\" />
+    <Folder Include="Controllers\Administration\" />
+    <Folder Include="Controllers\Purchases\" />
     <Folder Include="Identity\" />
     <Folder Include="ViewModels\Accounting\" />
     <Folder Include="ViewModels\Sales\" />
     <Folder Include="Views\Accounts\" />
     <Folder Include="Views\Payments\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Accounting.Services\Accounting.Services.csproj" />
+    <Folder Include="Views\Administration\" />
+    <Folder Include="Views\Purchases\" />
   </ItemGroup>
 
 </Project>

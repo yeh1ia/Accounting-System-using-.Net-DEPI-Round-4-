@@ -1,12 +1,23 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Accounting.Data.ViewModels.Dashboard;
+using Accounting.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
-namespace Accounting.Data.Controllers.Dashboard
+namespace AccountingSystem.Controllers.Dashboard;
+
+[Authorize]
+public class DashboardController : Controller
 {
-    public class DashboardController : Controller
+    private readonly IDashboardService dashboardService;
+
+    public DashboardController(IDashboardService dashboardService)
     {
-        public IActionResult Index()
-        {
-            return View();
-        }
+        this.dashboardService = dashboardService;
+    }
+
+    public async Task<IActionResult> Index()
+    {
+        var stats = await dashboardService.GetStatsAsync();
+        return View("~/Views/Dashboard/Index.cshtml", stats);
     }
 }

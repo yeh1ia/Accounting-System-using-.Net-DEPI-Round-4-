@@ -1,4 +1,4 @@
-﻿using Accounting.Data.Identity;
+using Accounting.Data.Identity;
 using Accounting.Data.ViewModels.Auth;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -28,19 +28,25 @@ namespace AccountingSystem.Controllers.Auth
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
-            if (!ModelState.IsValid) 
+            if (!ModelState.IsValid)
             {
                 return View(model);
             }
 
-            var result = await signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
+            var result = await signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: true);
 
-            if (result.Succeeded) 
+            if (result.Succeeded)
             {
                 return RedirectToAction("Index", "Home");
             }
 
-            ModelState.AddModelError(string.Empty, "Invalid Login Attempt.");
+            if (result.IsLockedOut)
+            {
+                ModelState.AddModelError(string.Empty, "Account locked out. Please try again later.");
+                return View(model);
+            }
+
+            ModelState.AddModelError(string.Empty, "Invalid login attempt.");
             return View(model);
         }
 
@@ -63,28 +69,21 @@ namespace AccountingSystem.Controllers.Auth
             {
                 FullName = model.Name,
                 UserName = model.Email,
-                NormalizedUserName = model.Email.ToLower(),
                 Email = model.Email,
-                NormalizedEmail = model.Email.ToLower(),
             };
 
             var result = await userManager.CreateAsync(user, model.Password);
 
             if (result.Succeeded)
             {
-                var roleExist = await roleManager.RoleExistsAsync("User");
-
-                if (!roleExist)
+                if (!await roleManager.RoleExistsAsync("User"))
                 {
-                    var role = new IdentityRole("User");
-                    await roleManager.CreateAsync(role);
+                    await roleManager.CreateAsync(new IdentityRole("User"));
                 }
 
                 await userManager.AddToRoleAsync(user, "User");
 
-                await signInManager.SignInAsync(user, isPersistent: false);
-
-                TempData["SuccessMessage"] = "You have been successfully Register, LogIn to Continue.";
+                TempData["SuccessMessage"] = "Account created successfully. Please sign in.";
                 return RedirectToAction("Login", "Account");
             }
 
@@ -106,22 +105,20 @@ namespace AccountingSystem.Controllers.Auth
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> VerifyEmail(VerifyEmailViewModel model)
         {
-            if (!ModelState.IsValid) 
+            if (!ModelState.IsValid)
             {
                 return View(model);
             }
 
             var user = await userManager.FindByEmailAsync(model.Email);
 
-            if (user == null) 
+            if (user == null)
             {
-                ModelState.AddModelError("", "User Not Found!");
+                ModelState.AddModelError("", "User not found.");
                 return View(model);
             }
-            else
-            {
-                return RedirectToAction("ChangePassword", "Account", new { user.UserName });
-            }
+
+            return RedirectToAction("ChangePassword", "Account", new { user.UserName });
         }
 
         [HttpGet]
@@ -131,23 +128,23 @@ namespace AccountingSystem.Controllers.Auth
             {
                 return RedirectToAction("VerifyEmail", "Account");
             }
-            return View(new ChangePasswordViewModel {Email = username});
+            return View(new ChangePasswordViewModel { Email = username });
         }
 
         [HttpPost]
-        public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model) 
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
         {
-            if (!ModelState.IsValid) 
+            if (!ModelState.IsValid)
             {
-                ModelState.AddModelError("", "Something went Wrong");
-                return View(model); 
+                return View(model);
             }
 
             var user = await userManager.FindByNameAsync(model.Email);
 
             if (user == null)
             {
-                ModelState.AddModelError("", "User not found!");
+                ModelState.AddModelError("", "User not found.");
                 return View(model);
             }
 
@@ -155,18 +152,18 @@ namespace AccountingSystem.Controllers.Auth
             if (result.Succeeded)
             {
                 result = await userManager.AddPasswordAsync(user, model.NewPassword);
-
-                TempData["SuccessMessage"] = "Password Changed Successfully.";
-                return RedirectToAction("Login", "Account");
-            }
-            else
-            {
-                foreach (var error in result.Errors)
+                if (result.Succeeded)
                 {
-                    ModelState.AddModelError("", error.Description);
+                    TempData["SuccessMessage"] = "Password changed successfully.";
+                    return RedirectToAction("Login", "Account");
                 }
-                return View(model);
             }
+
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError("", error.Description);
+            }
+            return View(model);
         }
 
         [HttpPost]
@@ -176,6 +173,5 @@ namespace AccountingSystem.Controllers.Auth
             await signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }
-
     }
 }

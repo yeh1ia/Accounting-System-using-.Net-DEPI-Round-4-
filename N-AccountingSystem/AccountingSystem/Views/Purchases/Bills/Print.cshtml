@@ -1,0 +1,202 @@
+@using Accounting.Data.Domain
+@model Accounting.Data.ViewModels.Purchases.BillDetailViewModel
+
+@{
+    Layout = null;
+    var statusClass = Model.Status switch
+    {
+        DocumentStatus.Draft => "status-Draft",
+        DocumentStatus.Sent => "status-Sent",
+        DocumentStatus.Partial => "status-Partial",
+        DocumentStatus.Paid => "status-Paid",
+        DocumentStatus.Cancelled => "status-Cancelled",
+        _ => ""
+    };
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@Model.BillNumber — Bill</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <style>
+        @@media print { .no-print { display: none !important; } body { padding: 0; } }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f8f9fa; }
+        .bill-paper {
+            background: white;
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2.5rem;
+            box-shadow: 0 0 20px rgba(0,0,0,.15);
+            border-radius: 4px;
+        }
+        .bill-header { border-bottom: 2px solid #0d6efd; padding-bottom: 1rem; margin-bottom: 1.5rem; }
+        .bill-title { font-size: 2rem; font-weight: 700; color: #0d6efd; }
+        .status-badge { padding: .3rem .8rem; border-radius: 20px; font-size: .85rem; display: inline-block; }
+        .status-Draft { background: #e9ecef; color: #6c757d; }
+        .status-Sent { background: #cfe2ff; color: #084298; }
+        .status-Partial { background: #cff4fc; color: #0c63a4; }
+        .status-Paid { background: #d1e7dd; color: #0f5132; }
+        .status-Cancelled { background: #f8d7da; color: #842029; }
+        .info-box { background: #f8f9fa; padding: 1rem; border-radius: 4px; }
+        .info-box h6 { color: #6c757d; font-size: .75rem; text-transform: uppercase; margin-bottom: .25rem; }
+        .info-box p { margin: 0; font-weight: 600; }
+        .line-items th { background: #0d6efd; color: white; }
+        .line-items th:first-child { border-radius: 4px 0 0 0; }
+        .line-items th:last-child { border-radius: 0 4px 0 0; }
+        .summary-box { background: #f8f9fa; border-radius: 4px; padding: 1rem; }
+        .summary-row { display: flex; justify-content: space-between; padding: .3rem 0; }
+        .summary-row.total { border-top: 2px solid #333; margin-top: .5rem; padding-top: .5rem; font-size: 1.1rem; }
+        .footer-text { color: #6c757d; font-size: .85rem; border-top: 1px solid #dee2e6; padding-top: .75rem; margin-top: 1rem; }
+    </style>
+</head>
+<body>
+<div class="bill-paper">
+    <div class="bill-header d-flex justify-content-between align-items-start">
+        <div>
+            <div class="bill-title">BILL</div>
+            <div class="mt-1" style="font-size:1.2rem;color:#333;">@Model.BillNumber</div>
+            @if (!string.IsNullOrEmpty(Model.OrderNumber))
+            {
+                <div class="small text-muted">Order #: @Model.OrderNumber</div>
+            }
+        </div>
+        <div class="text-end">
+            <span class="status-badge @statusClass">@Model.Status</span>
+            <div class="mt-2 small text-muted">
+                <div>Bill Date: <strong>@Model.BilledAt.ToString("dd MMM yyyy")</strong></div>
+                <div>Due Date: <strong>@Model.DueAt.ToString("dd MMM yyyy")</strong></div>
+                <div>Currency: <strong>@Model.CurrencyName</strong></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-4">
+        <div class="col-6">
+            <div class="info-box">
+                <h6>Vendor</h6>
+                <p class="fw-bold fs-5 mb-1">@Model.ContactName</p>
+                @if (!string.IsNullOrEmpty(Model.ContactEmail))
+                {
+                    <p class="mb-0 small"><i class="bi bi-envelope me-1"></i>@Model.ContactEmail</p>
+                }
+                @if (!string.IsNullOrEmpty(Model.ContactPhone))
+                {
+                    <p class="mb-0 small"><i class="bi bi-telephone me-1"></i>@Model.ContactPhone</p>
+                }
+                @if (!string.IsNullOrEmpty(Model.ContactAddress))
+                {
+                    <p class="mb-0 small"><i class="bi bi-geo-alt me-1"></i>@Model.ContactAddress</p>
+                }
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="info-box">
+                <h6>Category</h6>
+                <p>@Model.CategoryName</p>
+            </div>
+        </div>
+    </div>
+
+    <table class="table table-bordered line-items mb-4">
+        <thead>
+            <tr>
+                <th>Description</th>
+                <th class="text-center">Qty</th>
+                <th class="text-end">Price</th>
+                <th class="text-center">Discount</th>
+                <th class="text-end">Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Items)
+            {
+                <tr>
+                    <td>@item.Description</td>
+                    <td class="text-center">@item.Quantity.ToString("N2")</td>
+                    <td class="text-end">@Model.CurrencySymbol@item.Price.ToString("N2")</td>
+                    <td class="text-center">
+                        @(item.DiscountType == DiscountType.Percent
+                            ? $"{item.DiscountRate}%"
+                            : $"{Model.CurrencySymbol}{item.DiscountRate}")
+                    </td>
+                    <td class="text-end fw-semibold">@Model.CurrencySymbol@item.Total.ToString("N2")</td>
+                </tr>
+            }
+            @if (!Model.Items.Any())
+            {
+                <tr><td colspan="5" class="text-center text-muted">No line items</td></tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="row">
+        <div class="col-7"></div>
+        <div class="col-5">
+            <div class="summary-box">
+                <div class="summary-row">
+                    <span>Total Amount</span>
+                    <span>@Model.CurrencySymbol@Model.Amount.ToString("N2")</span>
+                </div>
+                @if (Model.AmountPaid > 0)
+                {
+                    <div class="summary-row">
+                        <span>Amount Paid</span>
+                        <span class="text-success">-@Model.CurrencySymbol@Model.AmountPaid.ToString("N2")</span>
+                    </div>
+                }
+                <div class="summary-row total">
+                    <span>Amount Due</span>
+                    <span class="@(Model.AmountDue > 0 ? "text-danger" : "text-success")">
+                        @Model.CurrencySymbol@Model.AmountDue.ToString("N2")
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (Model.Payments.Any())
+    {
+        <h6 class="mt-4 mb-2">Payments Received</h6>
+        <table class="table table-sm">
+            <thead><tr><th>Date</th><th class="text-end">Amount</th><th>Notes</th></tr></thead>
+            <tbody>
+                @foreach (var p in Model.Payments)
+                {
+                    <tr>
+                        <td>@p.PaymentDate.ToString("dd MMM yyyy")</td>
+                        <td class="text-end text-success">@Model.CurrencySymbol@p.Amount.ToString("N2")</td>
+                        <td>@p.Notes ?? "—"</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+
+    @if (!string.IsNullOrEmpty(Model.Notes))
+    {
+        <div class="mt-3">
+            <strong>Notes:</strong>
+            <p class="text-muted mb-0">@Model.Notes</p>
+        </div>
+    }
+    @if (!string.IsNullOrEmpty(Model.Footer))
+    {
+        <div class="footer-text">@Model.Footer</div>
+    }
+
+    <div class="mt-4 pt-3 border-top no-print d-flex gap-2">
+        <button onclick="window.print()" class="btn btn-primary">
+            <i class="bi bi-printer"></i> Print
+        </button>
+        <a asp-action="Index" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Back to Bills
+        </a>
+    </div>
+</div>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,318 @@
+@using Accounting.Data.Domain
+@using Accounting.Data.ViewModels.Purchases
+
+@model BillFormViewModel
+
+@{
+    ViewData["Title"] = Model.IsEdit ? $"Edit Bill - {Model.BillNumber}" : "New Bill";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="d-flex align-items-center mb-4">
+    <a asp-action="Index" class="btn btn-outline-secondary me-3"><i class="bi bi-arrow-left"></i></a>
+    <h2><i class="bi bi-file-earmark-plus-fill"></i> @(Model.IsEdit ? $"Edit Bill — {Model.BillNumber}" : "New Bill")</h2>
+</div>
+
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">
+        <strong>Please fix the following errors:</strong>
+        <ul class="mb-0">
+            @foreach (var state in ViewData.ModelState)
+                foreach (var error in state.Value.Errors)
+                {
+                    <li>@error.ErrorMessage</li>
+                }
+        </ul>
+    </div>
+}
+
+<form id="billForm" asp-action="Save" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="BillId" />
+
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="card shadow-sm mb-3">
+                <div class="card-header bg-white"><h5 class="mb-0">Bill Information</h5></div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label asp-for="BillNumber" class="form-label"></label>
+                            <input asp-for="BillNumber" class="form-control" />
+                            <span asp-validation-for="BillNumber" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="OrderNumber" class="form-label"></label>
+                            <input asp-for="OrderNumber" class="form-control" placeholder="Optional" />
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="BilledAt" class="form-label"></label>
+                            <input asp-for="BilledAt" class="form-control" type="date" />
+                            <span asp-validation-for="BilledAt" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="DueAt" class="form-label"></label>
+                            <input asp-for="DueAt" class="form-control" type="date" />
+                            <span asp-validation-for="DueAt" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="Status" class="form-label"></label>
+                            <select asp-for="Status" class="form-select">
+                                @foreach (var opt in Model.StatusOptions)
+                                {
+                                    <option value="@opt.Value">@opt.Text</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="ContactId" class="form-label"></label>
+                            <select asp-for="ContactId" class="form-select" required>
+                                <option value="">-- Select Vendor --</option>
+                                @foreach (var opt in Model.Contacts)
+                                {
+                                    <option value="@opt.Value">@opt.Text</option>
+                                }
+                            </select>
+                            <span asp-validation-for="ContactId" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="CategoryId" class="form-label"></label>
+                            <select asp-for="CategoryId" class="form-select" required>
+                                <option value="">-- Select Category --</option>
+                                @foreach (var opt in Model.Categories)
+                                {
+                                    <option value="@opt.Value">@opt.Text</option>
+                                }
+                            </select>
+                            <span asp-validation-for="CategoryId" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="CurrencyName" class="form-label"></label>
+                            <select asp-for="CurrencyName" class="form-select">
+                                @foreach (var opt in Model.Currencies)
+                                {
+                                    <option value="@opt.Value">@opt.Text</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card shadow-sm mb-3">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Line Items</h5>
+                    <button type="button" class="btn btn-sm btn-primary" onclick="addLineItem()">
+                        <i class="bi bi-plus-circle"></i> Add Item
+                    </button>
+                </div>
+                <div class="table-responsive">
+                    <table class="table mb-0" id="itemsTable">
+                        <thead class="table-light">
+                            <tr>
+                                <th style="min-width:200px;">Description *</th>
+                                <th style="width:80px;">Qty *</th>
+                                <th style="width:120px;">Price *</th>
+                                <th style="width:170px;">Discount</th>
+                                <th style="width:150px;">Account *</th>
+                                <th style="width:120px;" class="text-end">Total</th>
+                                <th style="width:40px;"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="itemsBody">
+                            @for (int i = 0; i < Model.LineItems.Count; i++)
+                            {
+                                <tr class="line-item-row">
+                                    <td>
+                                        <input type="hidden" name="LineItems[@i].BillItemId" value="@Model.LineItems[i].BillItemId" />
+                                        <input type="hidden" name="LineItems[@i].ItemId" value="@Model.LineItems[i].ItemId" />
+                                        <input type="text" name="LineItems[@i].Description" class="form-control"
+                                               value="@Model.LineItems[i].Description" placeholder="Item description" required />
+                                    </td>
+                                    <td>
+                                        <input type="number" name="LineItems[@i].Quantity" class="form-control qty-input"
+                                               value="@Model.LineItems[i].Quantity" min="0.01" step="0.01" required oninput="recalculateRow(this)" />
+                                    </td>
+                                    <td>
+                                        <input type="number" name="LineItems[@i].Price" class="form-control price-input"
+                                               value="@Model.LineItems[i].Price" min="0" step="0.01" required oninput="recalculateRow(this)" />
+                                    </td>
+                                    <td>
+                                        <div class="input-group">
+                                            <input type="number" name="LineItems[@i].DiscountRate" class="form-control"
+                                                   value="@Model.LineItems[i].DiscountRate" min="0" step="0.01" placeholder="0" oninput="recalculateRow(this)" />
+                                            <select name="LineItems[@i].DiscountType" class="form-select" style="max-width:65px;" onchange="recalculateRow(this)">
+                                                <option value="Percent" selected>%</option>
+                                                <option value="Fixed">$</option>
+                                            </select>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <select name="LineItems[@i].AccountId" class="form-select" required>
+                                            <option value="">-- Account --</option>
+                                            @foreach (var acc in Model.Accounts)
+                                            {
+                                                <option value="@acc.Value" selected="@(Model.LineItems[i].AccountId.ToString() == acc.Value ? "selected" : null)">@acc.Text</option>
+                                            }
+                                        </select>
+                                    </td>
+                                    <td class="text-end fw-semibold total-cell">@Model.LineItems[i].Total.ToString("N2")</td>
+                                    <td>
+                                        <button type="button" class="btn btn-outline-danger btn-sm" onclick="removeLineItem(this)">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                        <tfoot class="table-light">
+                            <tr>
+                                <td colspan="5" class="text-end fw-bold">Grand Total:</td>
+                                <td class="text-end fw-bold fs-5 grand-total-cell" id="grandTotal">@Model.LineItems.Sum(x => x.Total).ToString("N2")</td>
+                                <td></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card shadow-sm">
+                <div class="card-header bg-white"><h5 class="mb-0">Additional Info</h5></div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label asp-for="Notes" class="form-label">Notes</label>
+                        <textarea asp-for="Notes" class="form-control" rows="3" placeholder="Internal notes..."></textarea>
+                    </div>
+                    <div class="mb-0">
+                        <label asp-for="Footer" class="form-label">Footer</label>
+                        <textarea asp-for="Footer" class="form-control" rows="2" placeholder="Terms, payment info..."></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white"><h5 class="mb-0">Save Bill</h5></div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-success btn-lg">
+                            <i class="bi bi-check-circle"></i> @(Model.IsEdit ? "Update Bill" : "Save Bill")
+                        </button>
+                        <a asp-action="Index" class="btn btn-outline-secondary">
+                            <i class="bi bi-x-circle"></i> Cancel
+                        </a>
+                        @if (!Model.IsEdit)
+                        {
+                            <a asp-action="Index" class="btn btn-outline-danger">
+                                <i class="bi bi-trash"></i> Discard
+                            </a>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            @if (Model.IsEdit && Model.BillId.HasValue)
+            {
+                <div class="card shadow-sm mt-3 border-danger">
+                    <div class="card-body">
+                        <h6 class="text-danger mb-3">Danger Zone</h6>
+                        <form asp-action="Delete" asp-route-id="@Model.BillId" method="post"
+                              onsubmit="return confirm('Permanently delete this bill?');">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-outline-danger w-100">
+                                <i class="bi bi-trash"></i> Delete Bill
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</form>
+
+<script>
+let lineIndex = @Model.LineItems.Count;
+
+function addLineItem() {
+    const tbody = document.getElementById('itemsBody');
+    const row = document.createElement('tr');
+    row.className = 'line-item-row';
+    row.innerHTML = `
+        <td>
+            <input type="hidden" name="LineItems[${lineIndex}].BillItemId" value="" />
+            <input type="hidden" name="LineItems[${lineIndex}].ItemId" value="" />
+            <input type="text" name="LineItems[${lineIndex}].Description" class="form-control" placeholder="Item description" required />
+        </td>
+        <td>
+            <input type="number" name="LineItems[${lineIndex}].Quantity" class="form-control qty-input" value="1" min="0.01" step="0.01" required oninput="recalculateRow(this)" />
+        </td>
+        <td>
+            <input type="number" name="LineItems[${lineIndex}].Price" class="form-control price-input" value="0" min="0" step="0.01" required oninput="recalculateRow(this)" />
+        </td>
+        <td>
+            <div class="input-group">
+                <input type="number" name="LineItems[${lineIndex}].DiscountRate" class="form-control" value="0" min="0" step="0.01" placeholder="0" oninput="recalculateRow(this)" />
+                <select name="LineItems[${lineIndex}].DiscountType" class="form-select" style="max-width:65px;" onchange="recalculateRow(this)">
+                    <option value="Percent" selected>%</option>
+                    <option value="Fixed">$</option>
+                </select>
+            </div>
+        </td>
+        <td>
+            <select name="LineItems[${lineIndex}].AccountId" class="form-select" required>
+                <option value="">-- Account --</option>
+                @foreach (var acc in Model.Accounts)
+                {
+                    <option value="@acc.Value">@acc.Text</option>
+                }
+            </select>
+        </td>
+        <td class="text-end fw-semibold total-cell">0.00</td>
+        <td>
+            <button type="button" class="btn btn-outline-danger btn-sm" onclick="removeLineItem(this)">
+                <i class="bi bi-trash"></i>
+            </button>
+        </td>
+    `;
+    tbody.appendChild(row);
+    lineIndex++;
+}
+
+function removeLineItem(btn) {
+    const rows = document.querySelectorAll('#itemsBody .line-item-row');
+    if (rows.length > 1) {
+        btn.closest('tr').remove();
+        updateGrandTotal();
+    }
+}
+
+function recalculateRow(input) {
+    const row = input.closest('tr');
+    const qty = parseFloat(row.querySelector('.qty-input').value) || 0;
+    const price = parseFloat(row.querySelector('.price-input').value) || 0;
+    const discRate = parseFloat(row.querySelector('[name$="DiscountRate"]').value) || 0;
+    const discType = row.querySelector('[name$="DiscountType"]').value;
+    let total = qty * price;
+    if (discType === 'Percent') total = total * (1 - discRate / 100);
+    else total = Math.max(0, total - discRate);
+    row.querySelector('.total-cell').textContent = total.toFixed(2);
+    updateGrandTotal();
+}
+
+function updateGrandTotal() {
+    let sum = 0;
+    document.querySelectorAll('.total-cell').forEach(cell => { sum += parseFloat(cell.textContent) || 0; });
+    document.getElementById('grandTotal').textContent = sum.toFixed(2);
+}
+
+// Init
+document.querySelectorAll('.line-item-row').forEach(row => recalculateRow(row.querySelector('input')));
+</script>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial.cshtml");
+    }
+}

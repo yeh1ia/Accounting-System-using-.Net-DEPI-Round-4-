@@ -1,33 +1,57 @@
-﻿@using Accounting.Data.ViewModels;
-@using Accounting.Data.ViewModels.Auth
-@model VerifyEmailViewModel;
+@model Accounting.Data.ViewModels.Auth.VerifyEmailViewModel
 
 @{
     ViewData["Title"] = "Verify Email";
     Layout = "~/Views/Shared/_AccountLayout.cshtml";
 }
 
-<div class="account-container">
-    <div class="account-box">
-        <h2 class="text-center mb-4">Verify Email</h2>
-        <form asp-action="VerifyEmail" method="post">
-            @Html.AntiForgeryToken()
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="mb-3">
-                <label asp-for="Email" class="form-label"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
+<div class="auth-page">
+    <div class="auth-image">
+        <img src="~/Images/account-background.jpg" alt="Background" />
+    </div>
+    <div class="auth-form-side">
+        <div class="auth-card">
+            <div class="text-center mb-3">
+                <i class="bi bi-envelope-check auth-logo"></i>
+                <h2>Verify Email</h2>
+                <p class="subtitle">Enter your registered email to continue</p>
             </div>
-            <input type="submit" value="Verify" class="btn btn-success w-100 p-2" />
-            <div class="text-center">
-                <a asp-controller="Account" asp-action="Login" class="text-decoration-none mt-3">Back to Login Page</a>
-            </div>
-        </form>
+
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show py-2" role="alert">
+                    @TempData["ErrorMessage"]
+                    <button type="button" class="btn-close btn-sm" data-bs-dismiss="alert"></button>
+                </div>
+            }
+
+            <form asp-action="VerifyEmail" method="post">
+                @Html.AntiForgeryToken()
+                <div asp-validation-summary="ModelOnly" class="text-danger small mb-2"></div>
+
+                <div class="mb-3">
+                    <label asp-for="Email" class="form-label">Email Address</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                        <input asp-for="Email" class="form-control" type="email" placeholder="you@example.com" autofocus />
+                    </div>
+                    <span asp-validation-for="Email" class="text-danger small"></span>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100 mb-3">
+                    <i class="bi bi-arrow-right-circle me-1"></i> Continue
+                </button>
+
+                <p class="text-center text-muted small mb-0">
+                    <a asp-action="Login" class="text-decoration-none fw-semibold">
+                        <i class="bi bi-arrow-left me-1"></i>Back to Sign In
+                    </a>
+                </p>
+            </form>
+        </div>
     </div>
 </div>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial.cshtml");
-    }
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial.cshtml"); }
 }

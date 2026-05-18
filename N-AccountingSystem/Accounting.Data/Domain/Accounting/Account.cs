@@ -9,15 +9,11 @@ public class Account : AuditableEntity
     public string Name { get; set; } = null!;
     public string AccountNumber { get; set; } = null!;
     public AccountType Type { get; set; }
-    
-
     public decimal OpeningBalance { get; set; } = 0;
     public bool Enabled { get; set; } = true;
 
-
-
     public Currency Currency { get; set; } = null!;
-    public ICollection<JournalItem> JournalItems { get; set; } = [];
+    public ICollection<JournalItem> JournalItems { get; set; } = new List<JournalItem>();
 }
 
 
@@ -28,6 +24,6 @@ public class Category : AuditableEntity
     public CategoryType Type { get; set; }
     public bool Enabled { get; set; } = true;
 
-    public ICollection<Invoice> Invoices { get; set; } = [];
-    public ICollection<Bill> Bills { get; set; } = [];
+    public ICollection<Invoice> Invoices { get; set; } = new List<Invoice>();
+    public ICollection<Bill> Bills { get; set; } = new List<Bill>();
 }

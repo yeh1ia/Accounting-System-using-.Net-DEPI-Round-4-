@@ -1,0 +1,71 @@
+@using Accounting.Data.ViewModels
+@model IEnumerable<SelectOption>
+
+@{
+    ViewData["Title"] = "Accounts";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="bi bi-bookmark-fill"></i> Chart of Accounts</h2>
+    <a asp-action="Create" class="btn btn-primary">
+        <i class="bi bi-plus-circle"></i> New Account
+    </a>
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="bi bi-check-circle-fill me-2"></i>
+        @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<div class="card shadow-sm">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>#</th>
+                        <th>Account</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!Model.Any())
+                    {
+                        <tr>
+                            <td colspan="3" class="text-center text-muted py-5">
+                                <i class="bi bi-bookmark" style="font-size:2.5rem;"></i>
+                                <p class="mb-0 mt-2">No accounts found.</p>
+                                <a asp-action="Create" class="btn btn-sm btn-primary mt-2">Create First Account</a>
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        foreach (var account in Model)
+                        {
+                            var parts = account.Text.Split(new[] { " - " }, 2, StringSplitOptions.None);
+                            var accountName = parts.Length > 1 ? parts[1] : account.Text;
+                            var typeAndNum = parts.Length > 1 ? parts[0] : account.Text;
+                            <tr>
+                                <td class="text-muted small">@typeAndNum</td>
+                                <td class="fw-semibold">@accountName</td>
+                                <td>
+                                    <div class="btn-group btn-group-sm">
+                                        <a asp-action="Edit" asp-route-id="@account.Value" class="btn btn-outline-primary" title="Edit">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -13,6 +13,6 @@ public class Currency : AuditableEntity
     public string? ThousandsSeparator { get; set; } = ",";
     public bool Enabled { get; set; } = true;
 
-    public ICollection<Account> Accounts { get; set; } = [];
-    public ICollection<JournalEntry> JournalEntries { get; set; } = [];
+    public ICollection<Account> Accounts { get; set; } = new List<Account>();
+    public ICollection<JournalEntry> JournalEntries { get; set; } = new List<JournalEntry>();
 }

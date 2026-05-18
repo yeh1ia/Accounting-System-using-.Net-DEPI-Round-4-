@@ -12,13 +12,13 @@ public class JournalEntry : AuditableEntity
     public string? Description { get; set; }
     public string? Reference { get; set; }
     public JournalEntryStatus Status { get; set; } = JournalEntryStatus.Draft;
-    public string? SourceType { get; set; } 
+    public string? SourceType { get; set; }
     public int? SourceId { get; set; }
 
     public Currency Currency { get; set; } = null!;
-    public ICollection<JournalItem> JournalItems { get; set; } = [];
-    public ICollection<InvoicePayment> InvoicePayments { get; set; } = [];
-    public ICollection<BillPayment> BillPayments { get; set; } = [];
+    public ICollection<JournalItem> JournalItems { get; set; } = new List<JournalItem>();
+    public ICollection<InvoicePayment> InvoicePayments { get; set; } = new List<InvoicePayment>();
+    public ICollection<BillPayment> BillPayments { get; set; } = new List<BillPayment>();
 
     public bool IsBalanced()
     {
@@ -36,18 +36,14 @@ public class JournalItem : AuditableEntity
     public int JournalItemId { get; set; }
     public int JournalEntryId { get; set; }
     public int AccountId { get; set; }
-
     public decimal Debit { get; set; } = 0;
-
     public decimal Credit { get; set; } = 0;
-
     public string? Description { get; set; }
     public int? ContactId { get; set; }
 
     public JournalEntry JournalEntry { get; set; } = null!;
     public Account Account { get; set; } = null!;
     public Contact? Contact { get; set; }
-
 
     public bool IsValid() =>
         (Debit > 0 && Credit == 0) || (Credit > 0 && Debit == 0);

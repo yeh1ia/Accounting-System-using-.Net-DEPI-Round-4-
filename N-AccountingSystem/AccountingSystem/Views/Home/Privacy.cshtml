@@ -1,6 +1,32 @@
-﻿@{
+@{
     ViewData["Title"] = "Privacy Policy";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<h1>@ViewData["Title"]</h1>
 
-<p>Use this page to detail your site's privacy policy.</p>
+<div class="d-flex align-items-center mb-4">
+    <a asp-controller="Home" asp-action="DashBoard" class="btn btn-outline-secondary me-3">
+        <i class="bi bi-arrow-left"></i>
+    </a>
+    <h2><i class="bi bi-shield-lock-fill text-primary"></i> Privacy Policy</h2>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <h4>Your Privacy Matters</h4>
+        <p class="text-muted">This application collects and stores data you provide for accounting and billing purposes only.</p>
+        <hr />
+        <h5>Data We Collect</h5>
+        <ul>
+            <li>User account information (name, email, phone)</li>
+            <li>Business transaction data (bills, invoices, contacts)</li>
+            <li>Financial account information (chart of accounts)</li>
+        </ul>
+        <h5>How We Use It</h5>
+        <p>Your data is used solely for running the accounting system. We do not share your data with third parties.</p>
+        <h5>Data Security</h5>
+        <p>All data is stored securely using industry-standard encryption. Access is restricted to authenticated users only.</p>
+        <a asp-controller="Home" asp-action="DashBoard" class="btn btn-primary mt-3">
+            <i class="bi bi-house me-2"></i> Back to Dashboard
+        </a>
+    </div>
+</div>

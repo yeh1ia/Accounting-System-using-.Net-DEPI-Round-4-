@@ -1,0 +1,142 @@
+@using Accounting.Data.Domain
+@model Accounting.Data.ViewModels.Accounting.AccountFormViewModel
+
+@{
+    ViewData["Title"] = Model.IsEdit ? $"Edit Account — {Model.Name}" : "New Account";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="d-flex align-items-center mb-4">
+    <a asp-controller="Accounts" asp-action="Index" class="btn btn-outline-secondary me-3">
+        <i class="bi bi-arrow-left"></i>
+    </a>
+    <h2><i class="bi bi-@(Model.IsEdit ? "pencil-square" : "folder-plus-fill")"></i> @(Model.IsEdit ? $"Edit Account — {Model.Name}" : "New Account")</h2>
+</div>
+
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">
+        <strong>Please fix the following errors:</strong>
+        <ul class="mb-0">
+            @foreach (var state in ViewData.ModelState)
+                foreach (var error in state.Value.Errors)
+                {
+                    <li>@error.ErrorMessage</li>
+                }
+        </ul>
+    </div>
+}
+
+<form method="post" asp-action="Save">
+    @Html.AntiForgeryToken()
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card shadow-sm mb-3">
+                <div class="card-header bg-white"><h5 class="mb-0">Account Information</h5></div>
+                <div class="card-body">
+                    @if (Model.IsEdit)
+                    {
+                        <input type="hidden" asp-for="AccountId" />
+                    }
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label asp-for="AccountNumber" class="form-label"></label>
+                            <input asp-for="AccountNumber" class="form-control" placeholder="e.g. 1001, EXP-001" />
+                            <span asp-validation-for="AccountNumber" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="Name" class="form-label"></label>
+                            <input asp-for="Name" class="form-control" placeholder="e.g. Cash, Office Expenses" />
+                            <span asp-validation-for="Name" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="Type" class="form-label"></label>
+                            <select asp-for="Type" class="form-select">
+                                @foreach (var opt in Model.TypeOptions)
+                                {
+                                    <option value="@opt.Value">@opt.Text</option>
+                                }
+                            </select>
+                            <span asp-validation-for="Type" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="CurrencyName" class="form-label"></label>
+                            <select asp-for="CurrencyName" class="form-select">
+                                @foreach (var opt in Model.Currencies)
+                                {
+                                    <option value="@opt.Value">@opt.Text</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="OpeningBalance" class="form-label"></label>
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                <input asp-for="OpeningBalance" class="form-control" type="number" step="0.01" min="0" />
+                            </div>
+                        </div>
+                        <div class="col-md-6 d-flex align-items-end">
+                            <div class="form-check form-switch mb-3">
+                                <input asp-for="Enabled" class="form-check-input" role="switch" />
+                                <label asp-for="Enabled" class="form-check-label">Account is active / enabled</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @if (Model.IsEdit && Model.AccountId.HasValue)
+            {
+                <div class="card shadow-sm border-danger">
+                    <div class="card-header bg-white"><h5 class="mb-0 text-danger">Danger Zone</h5></div>
+                    <div class="card-body">
+                        <p class="text-muted small mb-3">
+                            Deleting an account is permanent. Ensure no journal entries reference this account.
+                        </p>
+                        <form asp-action="Delete" asp-route-id="@Model.AccountId" method="post"
+                              onsubmit="return confirm('Permanently delete this account?');">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-outline-danger">
+                                <i class="bi bi-trash"></i> Delete Account
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card shadow-sm mb-3">
+                <div class="card-header bg-white"><h5 class="mb-0">Account Type Guide</h5></div>
+                <div class="card-body small">
+                    <div class="mb-2"><span class="badge bg-primary">Asset</span> Resources owned (Cash, Equipment)</div>
+                    <div class="mb-2"><span class="badge bg-secondary">Liability</span> Debts owed (Accounts Payable)</div>
+                    <div class="mb-2"><span class="badge bg-dark">Equity</span> Owner's stake</div>
+                    <div class="mb-2"><span class="badge bg-success">Income</span> Revenue earned</div>
+                    <div class="mb-0"><span class="badge bg-danger">Expense</span> Money spent</div>
+                </div>
+            </div>
+
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-success btn-lg">
+                            <i class="bi bi-check-circle"></i> @(Model.IsEdit ? "Update Account" : "Create Account")
+                        </button>
+                        <a asp-controller="Accounts" asp-action="Index" class="btn btn-outline-secondary">
+                            <i class="bi bi-x-circle"></i> Cancel
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial.cshtml");
+    }
+}

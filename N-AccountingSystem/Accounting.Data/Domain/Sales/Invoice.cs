@@ -22,23 +22,20 @@ public class Invoice : AuditableEntity
 
     public string? Notes { get; set; }
     public string? Footer { get; set; }
-    public int? ParentId { get; set; } 
+    public int? ParentId { get; set; }
 
     public Currency Currency { get; set; } = null!;
     public Category Category { get; set; } = null!;
     public Contact Contact { get; set; } = null!;
     public Invoice? Parent { get; set; }
-    public ICollection<Invoice> CreditNotes { get; set; } = [];
-    public ICollection<InvoiceItem> Items { get; set; } = [];
-    public ICollection<InvoicePayment> Payments { get; set; } = [];
-    public ICollection<InvoiceStatusLog> StatusLogs { get; set; } = [];
+    public ICollection<Invoice> CreditNotes { get; set; } = new List<Invoice>();
+    public ICollection<InvoiceItem> Items { get; set; } = new List<InvoiceItem>();
+    public ICollection<InvoicePayment> Payments { get; set; } = new List<InvoicePayment>();
+    public ICollection<InvoiceStatusLog> StatusLogs { get; set; } = new List<InvoiceStatusLog>();
 
-    
     public decimal AmountPaid => Payments.Sum(p => p.Amount);
-
     public decimal AmountDue => Amount - AmountPaid;
 
-   
     public void RecalculateAmount()
         => Amount = Items.Where(i => !i.IsDeleted).Sum(i => i.Total);
 }
@@ -60,14 +57,12 @@ public class InvoiceItem : AuditableEntity
     public Item? Item { get; set; }
     public Account Account { get; set; } = null!;
 
-   
     public void RecalculateTotal()
     {
         Total = DiscountType == DiscountType.Percent
             ? Quantity * Price * (1m - DiscountRate / 100m)
             : Quantity * Price - DiscountRate;
-
-        if (Total < 0) Total = 0;  
+        if (Total < 0) Total = 0;
     }
 }
 
@@ -75,13 +70,13 @@ public class InvoicePayment
 {
     public int InvoicePaymentId { get; set; }
     public int InvoiceId { get; set; }
-    public int JournalEntryId { get; set; }
+    public int? JournalEntryId { get; set; }
     public decimal Amount { get; set; }
     public DateTime PaymentDate { get; set; }
     public string? Notes { get; set; }
     public DateTime CreatedAt { get; set; }
     public Invoice Invoice { get; set; } = null!;
-    public JournalEntry JournalEntry { get; set; } = null!;
+    public JournalEntry? JournalEntry { get; set; }
 }
 
 public class InvoiceStatusLog

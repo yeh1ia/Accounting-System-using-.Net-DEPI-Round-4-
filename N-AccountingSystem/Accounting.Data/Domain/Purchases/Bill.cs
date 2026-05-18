@@ -1,5 +1,6 @@
-using Accounting.Data.Domain.People;
 using Accounting.Data.Domain.Accounting;
+using Accounting.Data.Domain.People;
+using Accounting.Data.Domain.Sales;
 
 namespace Accounting.Data.Domain.Purchases;
 
@@ -24,16 +25,14 @@ public class Bill : AuditableEntity
     public string? Footer { get; set; }
     public int? ParentId { get; set; }
 
-
-
     public Currency Currency { get; set; } = null!;
     public Category Category { get; set; } = null!;
     public Contact Contact { get; set; } = null!;
     public Bill? Parent { get; set; }
-    public ICollection<Bill> DebitNotes { get; set; } = [];
-    public ICollection<BillItem> Items { get; set; } = [];
-    public ICollection<BillPayment> Payments { get; set; } = [];
-    public ICollection<BillStatusLog> StatusLogs { get; set; } = [];
+    public ICollection<Bill> DebitNotes { get; set; } = new List<Bill>();
+    public ICollection<BillItem> Items { get; set; } = new List<BillItem>();
+    public ICollection<BillPayment> Payments { get; set; } = new List<BillPayment>();
+    public ICollection<BillStatusLog> StatusLogs { get; set; } = new List<BillStatusLog>();
 
     public decimal AmountPaid => Payments.Sum(p => p.Amount);
     public decimal AmountDue => Amount - AmountPaid;
@@ -72,14 +71,14 @@ public class BillPayment
 {
     public int BillPaymentId { get; set; }
     public int BillId { get; set; }
-    public int JournalEntryId { get; set; }
+    public int? JournalEntryId { get; set; }
     public decimal Amount { get; set; }
     public DateTime PaymentDate { get; set; }
     public string? Notes { get; set; }
     public DateTime CreatedAt { get; set; }
 
     public Bill Bill { get; set; } = null!;
-    public JournalEntry JournalEntry { get; set; } = null!;
+    public JournalEntry? JournalEntry { get; set; }
 }
 
 public class BillStatusLog

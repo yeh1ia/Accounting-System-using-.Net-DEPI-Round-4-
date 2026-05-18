@@ -1,0 +1,120 @@
+@model Accounting.Data.ViewModels.Administration.UserFormViewModel
+
+@{
+    ViewData["Title"] = Model.IsEdit ? "Edit User" : "Create User";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="d-flex align-items-center mb-4">
+    <a asp-action="Index" class="btn btn-outline-secondary me-3">
+        <i class="bi bi-arrow-left"></i>
+    </a>
+    <h2><i class="bi @(Model.IsEdit ? "person-check-fill" : "person-plus-fill")"></i> @(Model.IsEdit ? "Edit User" : "Create New User")</h2>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <form asp-action="@(Model.IsEdit ? "Edit" : "Create")" method="post">
+            @Html.AntiForgeryToken()
+
+            @if (Model.IsEdit)
+            {
+                <input type="hidden" asp-for="Id" />
+            }
+
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label asp-for="FullName" class="form-label"></label>
+                        <input asp-for="FullName" class="form-control" placeholder="Enter full name" />
+                        <span asp-validation-for="FullName" class="text-danger small"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label asp-for="Email" class="form-label"></label>
+                        <input asp-for="Email" class="form-control" type="email" placeholder="user@example.com" />
+                        <span asp-validation-for="Email" class="text-danger small"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label asp-for="PhoneNumber" class="form-label"></label>
+                        <input asp-for="PhoneNumber" class="form-control" placeholder="+1 234 567 8900" />
+                        <span asp-validation-for="PhoneNumber" class="text-danger small"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label asp-for="SelectedRole" class="form-label"></label>
+                        <select asp-for="SelectedRole" class="form-select">
+                            <option value="">-- Select Role --</option>
+                            @foreach (var role in Model.AvailableRoles)
+                            {
+                                <option value="@role.Value">@role.Text</option>
+                            }
+                        </select>
+                        <span asp-validation-for="SelectedRole" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                @if (!Model.IsEdit)
+                {
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label asp-for="Password" class="form-label"></label>
+                            <input asp-for="Password" class="form-control" type="password" placeholder="Min 6 characters" />
+                            <span asp-validation-for="Password" class="text-danger small"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label asp-for="ConfirmPassword" class="form-label"></label>
+                            <input asp-for="ConfirmPassword" class="form-control" type="password" placeholder="Repeat password" />
+                            <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="col-12">
+                        <div class="alert alert-info mb-0">
+                            <i class="bi bi-info-circle me-2"></i>
+                            Leave password fields empty to keep the current password.
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label asp-for="Password" class="form-label">New Password</label>
+                            <input asp-for="Password" class="form-control" type="password" placeholder="Leave blank to keep current" />
+                            <span asp-validation-for="Password" class="text-danger small"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label asp-for="ConfirmPassword" class="form-label">Confirm New Password</label>
+                            <input asp-for="ConfirmPassword" class="form-control" type="password" />
+                            <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <hr class="my-4" />
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-success">
+                    <i class="bi bi-check-circle"></i> @(Model.IsEdit ? "Update User" : "Create User")
+                </button>
+                <a asp-action="Index" class="btn btn-secondary">
+                    <i class="bi bi-x-circle"></i> Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial.cshtml");
+    }
+}

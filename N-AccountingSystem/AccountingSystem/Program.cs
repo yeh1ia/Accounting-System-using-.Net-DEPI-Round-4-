@@ -1,15 +1,16 @@
-using Accounting.Data;         
-using Accounting.Data.Identity;  
+using Accounting.Data;
+using Accounting.Data.Identity;
+using Accounting.Services;
+using Accounting.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
-options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
+    options.UseSqlite(builder.Configuration.GetConnectionString("Default")!));
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 {
@@ -21,35 +22,50 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
     options.SignIn.RequireConfirmedAccount = false;
     options.SignIn.RequireConfirmedEmail = false;
     options.SignIn.RequireConfirmedPhoneNumber = false;
+    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
+    options.Lockout.MaxFailedAccessAttempts = 5;
+    options.Lockout.AllowedForNewUsers = true;
 })
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders();
 
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Account/Login";
+    options.AccessDeniedPath = "/Home/AccessDenied";
+});
+
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IBillService, BillService>();
+builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddScoped<IDashboardService, DashboardService>();
+
 var app = builder.Build();
 
-await IdentitySeed.SeedDatabase(app.Services);
+if (app.Environment.IsDevelopment())
+{
+    await IdentitySeed.SeedDatabase(app.Services);
+}
 
-// Configure the HTTP request pipeline.
+app.UseExceptionHandler("/Home/Error");
+app.UseStatusCodePagesWithReExecute("/Home/StatusCode/{0}");
+
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection(); // Disabled for local development — enable with cert in production
+app.UseStaticFiles();
 app.UseRouting();
 
-app.UseAuthentication(); 
+app.UseAuthentication();
 
 app.UseAuthorization();
 
-app.MapStaticAssets();
-
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}")
-    .WithStaticAssets();
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 
 app.Run();

@@ -1,21 +1,129 @@
-﻿.account-container {
-    background-image: url('../Images/account-background.jpg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: repeat-y;
-    display: flex;
-    justify-content: right;
-    align-items: center;
-    min-height: 100vh;
-    padding: 2rem 5rem;
+html, body {
+    height: 100%;
+    margin: 0;
 }
 
-.account-box{
-    background-color: white;
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-    max-width: 500px;
+.auth-page {
+    display: flex;
+    height: 100vh;
+}
+
+.auth-image {
+    width: 50%;
+    min-height: 100vh;
+    flex-shrink: 0;
+    overflow: hidden;
+    position: relative;
+}
+
+.auth-image img {
     width: 100%;
-    opacity: 0.9;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.auth-form-side {
+    width: 50%;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    background: #f8f9fa;
+    overflow-y: auto;
+}
+
+.auth-card {
+    width: 100%;
+    max-width: 420px;
+    background: #fff;
+    border-radius: 16px;
+    padding: 2.5rem;
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.08);
+}
+
+.auth-card .auth-logo {
+    font-size: 2.5rem;
+    color: #0d6efd;
+}
+
+.auth-card h2 {
+    font-weight: 700;
+    font-size: 1.5rem;
+    margin-bottom: 0.2rem;
+    color: #212529;
+}
+
+.auth-card .subtitle {
+    color: #6c757d;
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+}
+
+.auth-card .form-label {
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: #495057;
+    margin-bottom: 0.3rem;
+}
+
+.auth-card .input-group-text {
+    background: #f0f4f8;
+    border-right: none;
+    color: #6c757d;
+}
+
+.auth-card .input-group .form-control {
+    border-left: none;
+    background: #fff;
+}
+
+.auth-card .form-control:focus {
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
+    border-color: #86b7fe;
+}
+
+.auth-card .input-group:focus-within .input-group-text {
+    border-color: #86b7fe;
+}
+
+.auth-card .btn-primary {
+    padding: 0.6rem;
+    font-weight: 600;
+    font-size: 0.95rem;
+    border-radius: 8px;
+}
+
+.password-toggle {
+    cursor: pointer;
+    background: #f0f4f8;
+    border-left: none;
+}
+
+.password-toggle:hover {
+    color: #0d6efd;
+}
+
+@media (max-width: 991.98px) {
+    .auth-page {
+        flex-direction: column;
+    }
+    .auth-image {
+        display: none;
+    }
+    .auth-form-side {
+        width: 100%;
+        min-height: 100vh;
+        padding: 1.5rem;
+    }
+}
+
+@media (min-width: 992px) and (max-width: 1199.98px) {
+    .auth-card {
+        max-width: 380px;
+        padding: 2rem;
+    }
 }

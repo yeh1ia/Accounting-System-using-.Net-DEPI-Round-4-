@@ -15,22 +15,22 @@ namespace Accounting.Data
         {
         }
 
-        public DbSet<Account> Accounts { get; set; }
-        public DbSet<Currency> Currencies { get; set; }
-        public DbSet<JournalEntry> JournalEntries { get; set; }
-        public DbSet<JournalItem> JournalItems { get; set; }
-        public DbSet<Invoice> Invoices { get; set; }
-        public DbSet<InvoiceItem> InvoiceItems { get; set; }
-        public DbSet<InvoicePayment> InvoicePayments { get; set; }
-        public DbSet<InvoiceStatusLog> InvoiceStatusLogs { get; set; }
-        public DbSet<Bill> Bills { get; set; }
-        public DbSet<BillItem> BillItems { get; set; }
-        public DbSet<BillPayment> BillPayments { get; set; }
-        public DbSet<BillStatusLog> BillStatusLogs { get; set; }
-        public DbSet<Contact> Contacts { get; set; }
-        public DbSet<Item> Items { get; set; }
-        public DbSet<Category> Categories { get; set; }
-        public DbSet<Setting> Settings { get; set; }
+        public DbSet<Account> Accounts { get; set; } = null!;
+        public DbSet<Currency> Currencies { get; set; } = null!;
+        public DbSet<JournalEntry> JournalEntries { get; set; } = null!;
+        public DbSet<JournalItem> JournalItems { get; set; } = null!;
+        public DbSet<Invoice> Invoices { get; set; } = null!;
+        public DbSet<InvoiceItem> InvoiceItems { get; set; } = null!;
+        public DbSet<InvoicePayment> InvoicePayments { get; set; } = null!;
+        public DbSet<InvoiceStatusLog> InvoiceStatusLogs { get; set; } = null!;
+        public DbSet<Bill> Bills { get; set; } = null!;
+        public DbSet<BillItem> BillItems { get; set; } = null!;
+        public DbSet<BillPayment> BillPayments { get; set; } = null!;
+        public DbSet<BillStatusLog> BillStatusLogs { get; set; } = null!;
+        public DbSet<Contact> Contacts { get; set; } = null!;
+        public DbSet<Item> Items { get; set; } = null!;
+        public DbSet<Category> Categories { get; set; } = null!;
+        public DbSet<Setting> Settings { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

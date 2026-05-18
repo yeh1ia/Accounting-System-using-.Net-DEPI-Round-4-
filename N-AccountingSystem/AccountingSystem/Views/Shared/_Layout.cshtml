@@ -1,19 +1,21 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - AccountingSystem</title>
-    <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/AccountingSystem.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/lib/bootstrap-icons/font/bootstrap-icons.min.css" />
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-primary shadow">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">AccountingSystem</a>
+                <a class="navbar-brand fw-bold" asp-area="" asp-controller="Home" asp-action="Index">
+                    <i class="bi bi-calculator me-1"></i> AccountingSystem
+                </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -21,24 +23,86 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link" asp-controller="Home" asp-action="Index">
+                                <i class="bi bi-house-door me-1"></i> Home
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link" asp-controller="Dashboard" asp-action="Index">
+                                <i class="bi bi-grid-1x2 me-1"></i> Dashboard
+                            </a>
                         </li>
-                        <partial name="_LoginPartial" />
+
+                        @* Purchases Dropdown — all authenticated users *@
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="purchasesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-cart4 me-1"></i> Purchases
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="purchasesDropdown">
+                                <li><a class="dropdown-item" asp-controller="Bills" asp-action="Index">
+                                    <i class="bi bi-file-earmark-text me-2"></i> Bills List
+                                </a></li>
+                                <li><a class="dropdown-item" asp-controller="Bills" asp-action="Create">
+                                    <i class="bi bi-file-earmark-plus me-2"></i> New Bill
+                                </a></li>
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <li><a class="dropdown-item" asp-controller="Bills" asp-action="Approvals">
+                                        <i class="bi bi-check-circle me-2"></i> Approvals
+                                    </a></li>
+                                }
+                            </ul>
+                        </li>
+
+                        @* Accounting Dropdown — Admin and Accountant only *@
+                        @if (User.IsInRole("Admin") || User.IsInRole("Accountant"))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="accountingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi bi-bookmark me-1"></i> Chart of Accounts
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="accountingDropdown">
+                                    <li><a class="dropdown-item" asp-controller="Accounts" asp-action="Index">
+                                        <i class="bi bi-list-ul me-2"></i> Accounts List
+                                    </a></li>
+                                    <li><a class="dropdown-item" asp-controller="Accounts" asp-action="Create">
+                                        <i class="bi bi-folder-plus me-2"></i> New Account
+                                    </a></li>
+                                </ul>
+                            </li>
+                        }
+
+                        @* Administration Dropdown — Admin only *@
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi bi-shield-lock me-1"></i> Administration
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="adminDropdown">
+                                    <li><a class="dropdown-item" asp-controller="Users" asp-action="Index">
+                                        <i class="bi bi-people me-2"></i> Users Management
+                                    </a></li>
+                                    <li><a class="dropdown-item" asp-controller="Users" asp-action="Create">
+                                        <i class="bi bi-person-plus me-2"></i> New User
+                                    </a></li>
+                                </ul>
+                            </li>
+                        }
                     </ul>
+
+                    <partial name="_LoginPartial" />
                 </div>
             </div>
         </nav>
     </header>
     <div class="container">
-        <main role="main" class="pb-3">
+        <main role="main" class="pb-3 mt-4">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <footer class="border-top footer text-muted mt-4">
         <div class="container">
             &copy; 2026 - AccountingSystem - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>

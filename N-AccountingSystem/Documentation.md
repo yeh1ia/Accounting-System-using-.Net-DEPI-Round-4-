@@ -169,17 +169,7 @@ On first run in Development mode, the database is automatically created and seed
 | **Business Logic**   | Accounting.Services  | Service interfaces & implementations      |
 | **Presentation**     | AccountingSystem     | Controllers, Views, Static assets         |
 
-### Design Patterns Used
 
-| Pattern                  | Where Applied                                              |
-|--------------------------|------------------------------------------------------------|
-| Repository Pattern       | Via EF Core DbContext                                      |
-| Service Layer            | IAccountService, IBillService, IDashboardService, IUserService |
-| Dependency Injection     | Scoped services registered in Program.cs                   |
-| Soft Delete              | `DeletedAt` field on AuditableEntity                       |
-| Audit Trail              | `CreatedAt`, `UpdatedAt` on all entities; StatusLog tables |
-| ViewModel                | Separate models for each view/form                         |
-| Contact Snapshot         | Bill/Invoice stores a copy of contact details at creation  |
 
 ---
 

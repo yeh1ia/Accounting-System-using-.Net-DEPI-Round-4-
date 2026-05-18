@@ -16,16 +16,12 @@ The solution follows N‑Tier architecture with three separate projects:
 ## Team Members
 
 1- Yehia Fargaly
-2- Ahmed Ouda
-3- Ahmed Emad
-4- Ali Mohamed  
-5- Eman Ibrahim
+2- Ali Mohamed  
+3- Eman Ibrahim
 
 ## Roles & Responsibilities
 
-• Yehia Fargaly – Project Lead, Accounts Payable, User Management.
-• Ahmed Ouda –  
-• Ahmed Emad –
+• Yehia Fargaly – Project Lead, User Managment , Bills.
 • Ali Mohamed –
 • Eman Ibrahim – N‑Tier setup, Authentication, Entities Designer, Chart of Accounts, Dashboard.
 

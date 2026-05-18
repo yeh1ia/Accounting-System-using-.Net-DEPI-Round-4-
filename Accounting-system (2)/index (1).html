@@ -1,0 +1,1380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accounting Management System</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container-main">
+
+        <!-- ============================================================
+             SIDEBAR
+             ============================================================ -->
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <div class="sidebar-logo">📊</div>
+                <div class="sidebar-title">Accounting</div>
+            </div>
+
+            <!-- Dashboard -->
+            <div class="nav-section">
+                <div class="nav-label">Main</div>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-page="dashboard">📈 Dashboard</a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Accounting -->
+            <div class="nav-section">
+                <div class="nav-label">Accounting</div>
+                <ul class="nav-menu">
+                    <li class="nav-item"><a class="nav-link" data-page="journal-entries">📖 Journal Entries</a></li>
+                    <li class="nav-item"><a class="nav-link" data-page="transactions">💳 Transactions</a></li>
+                </ul>
+            </div>
+
+            <!-- Setup -->
+            <div class="nav-section">
+                <div class="nav-label">Setup</div>
+                <ul class="nav-menu">
+                    <li class="nav-item"><a class="nav-link" data-page="categories">🏷️ Categories</a></li>
+                    <li class="nav-item"><a class="nav-link" data-page="currencies">💱 Currencies</a></li>
+                </ul>
+            </div>
+
+            <!-- Sales -->
+            <div class="nav-section">
+                <div class="nav-label">Sales</div>
+                <ul class="nav-menu">
+                    <li class="nav-item"><a class="nav-link" data-page="invoices">🧾 Invoices</a></li>
+                    <li class="nav-item"><a class="nav-link" data-page="recurring-invoices">🔄 Recurring</a></li>
+                </ul>
+            </div>
+
+            <!-- CRM -->
+            <div class="nav-section">
+                <div class="nav-label">CRM</div>
+                <ul class="nav-menu">
+                    <li class="nav-item"><a class="nav-link" data-page="contacts">👥 Contacts</a></li>
+                </ul>
+            </div>
+
+            <!-- Reports -->
+            <div class="nav-section">
+                <div class="nav-label">Reports</div>
+                <ul class="nav-menu">
+                    <li class="nav-item"><a class="nav-link" data-page="reports-dashboard">📊 Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" data-page="financial-statements">📑 Statements</a></li>
+                    <li class="nav-item"><a class="nav-link" data-page="transaction-reports">📋 Transactions</a></li>
+                    <li class="nav-item"><a class="nav-link" data-page="custom-reports">🔧 Custom</a></li>
+                </ul>
+            </div>
+
+            <!-- Dark Mode Toggle -->
+            <div class="nav-section">
+                <div class="nav-label">Theme</div>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <button id="darkModeBtn" class="dark-mode-btn" onclick="DarkModeManager.toggle()"
+                                title="Switch to Dark Mode" aria-label="Switch to Dark Mode">
+                            <span class="btn-icon">🌙</span>
+                            <span class="btn-label">Dark Mode</span>
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </aside>
+
+        <!-- ============================================================
+             MAIN CONTENT
+             ============================================================ -->
+        <div class="main-content">
+
+            <!-- HEADER -->
+            <header class="header">
+                <h1 class="header-title" id="pageTitle">📈 Dashboard</h1>
+                <div class="header-actions">
+                    <div class="user-info">
+                        <div class="user-avatar">A</div>
+                        <div>
+                            <div class="user-name">User Admin</div>
+                            <div class="user-role">Super Admin</div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- PAGE CONTENT -->
+            <main class="page-content">
+
+                <!-- ============================================================
+                     DASHBOARD PAGE
+                     ============================================================ -->
+                <div id="dashboard" class="page active">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Financial Overview</div>
+                        </div>
+                        <div class="stats-grid">
+                            <div class="stat-card primary">
+                                <div class="stat-label">Total Revenue (Paid)</div>
+                                <div class="stat-value" id="rptTotalRevenue">$0.00</div>
+                            </div>
+                            <div class="stat-card success">
+                                <div class="stat-label">Accounts Receivable</div>
+                                <div class="stat-value" id="rptTotalReceivable">$0.00</div>
+                            </div>
+                            <div class="stat-card danger">
+                                <div class="stat-label">Total Transactions</div>
+                                <div class="stat-value" id="rptTotalTransactions">$0.00</div>
+                            </div>
+                            <div class="stat-card warning">
+                                <div class="stat-label">Posted Journal Entries</div>
+                                <div class="stat-value" id="rptPostedEntries">0</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Quick Actions</div>
+                        </div>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                            <button class="btn btn-primary" onclick="JournalEntryManager.openForm()" style="text-align:left;">+ New Journal Entry</button>
+                            <button class="btn btn-primary" onclick="InvoiceManager.openForm()"      style="text-align:left;">+ New Invoice</button>
+                            <button class="btn btn-primary" onclick="ContactManager.openForm()"      style="text-align:left;">+ New Contact</button>
+                            <button class="btn btn-primary" onclick="TransactionManager.openForm()"  style="text-align:left;">+ New Transaction</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ============================================================
+                     JOURNAL ENTRIES PAGES
+                     ============================================================ -->
+
+                <!-- JOURNAL ENTRIES LIST -->
+                <div id="journal-entries" class="page">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Journal Entries</div>
+                            <button class="btn btn-primary" onclick="JournalEntryManager.openForm()">+ New Entry</button>
+                        </div>
+                        <div class="search-bar">
+                            <input type="text" class="search-input" id="journalSearch" placeholder="Search by reference or description...">
+                            <select class="filter-select" id="journalStatus">
+                                <option value="">All Status</option>
+                                <option value="draft">Draft</option>
+                                <option value="posted">Posted</option>
+                            </select>
+                        </div>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Ref #</th>
+                                    <th>Date</th>
+                                    <th>Description</th>
+                                    <th>Debits</th>
+                                    <th>Credits</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="journalTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- JOURNAL ENTRY DETAIL -->
+                <div id="journal-entry-detail" class="page">
+                    <div class="card">
+                        <div class="card-header">
+                            <div>
+                                <div class="card-title" id="detailJERefNo">—</div>
+                                <div style="font-size:12px;color:var(--gray);margin-top:4px;" id="detailJEDate"></div>
+                            </div>
+                            <button class="btn btn-secondary" onclick="UIManager.navigateTo('journal-entries')">← Back to List</button>
+                        </div>
+                        <div class="detail-grid">
+                            <div>
+                                <div class="detail-label">Description</div>
+                                <div class="detail-value" id="detailJEDesc">—</div>
+                            </div>
+                            <div>
+                                <div class="detail-label">Status</div>
+                                <span class="badge badge-warning" id="detailJEStatus">draft</span>
+                            </div>
+                        </div>
+                        <h3 style="margin:20px 0 15px;font-size:16px;font-weight:700;">Line Items</h3>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Account / Description</th>
+                                    <th class="text-right">Debit</th>
+                                    <th class="text-right">Credit</th>
+                                </tr>
+                            </thead>
+                            <tbody id="detailJELines"></tbody>
+                            <tfoot>
+                                <tr class="line-total-row">
+                                    <td>TOTALS</td>
+                                    <td class="text-right" id="detailJETotalDebits">$0.00</td>
+                                    <td class="text-right" id="detailJETotalCredits">$0.00</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                        <div style="margin-top:20px;display:flex;gap:10px;">
+                            <button class="btn btn-primary"   onclick="JournalEntryManager.postCurrentEntry()">Post Entry</button>
+                            <button class="btn btn-warning"   onclick="JournalEntryManager.editEntry(JournalEntryManager._currentId)">Edit</button>
+                            <button class="btn btn-secondary" onclick="UIManager.navigateTo('journal-entries')">Back</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- JOURNAL ENTRY FORM -->
+                <div id="journal-entry-form" class="page">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Create / Edit Journal Entry</div>
+                        </div>
+                        <form id="journalEntryForm">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Reference #</label>
+                                    <input type="text" class="form-control" id="jeRefNumber" readonly>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Entry Date *</label>
+                                    <input type="date" class="form-control" id="jeEntryDate" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Description *</label>
+                                <input type="text" class="form-control" id="jeDescription" placeholder="Describe this journal entry" required>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;align-items:center;margin:25px 0 15px;">
+                                <h4 style="margin:0;font-size:16px;font-weight:700;">Line Items</h4>
+                                <button type="button" class="btn btn-secondary" onclick="JournalEntryManager.addLine()">+ Add Line</button>
+                            </div>
+                            <table class="line-items-table">
+                                <thead>
+                                    <tr>
+                                        <th>Account</th>
+                                        <th>Description</th>
+                                        <th style="width:130px;">Debit ($)</th>
+                                        <th style="width:130px;">Credit ($)</th>
+                                        <th style="width:60px;"></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="jeLineItems"></tbody>
+                                <tfoot>
+                                    <tr class="line-total-row">
+                                        <td colspan="2">TOTALS</td>
+                                        <td><strong id="jeTotalDebits">$0.00</strong></td>
+                                        <td><strong id="jeTotalCredits">$0.00</strong></td>
+                                        <td><span class="balance-status balance-error" id="jeBalanceStatus">✗ NOT BALANCED</span></td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                            <div style="display:flex;gap:10px;margin-top:25px;">
+                                <button type="submit" class="btn btn-success">Save Entry</button>
+                                <button type="button" class="btn btn-secondary" onclick="UIManager.navigateTo('journal-entries')">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- ============================================================
+                     TRANSACTIONS PAGES
+                     ============================================================ -->
+
+                <!-- TRANSACTIONS LIST -->
+                <div id="transactions" class="page">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Transactions</div>
+                            <button class="btn btn-primary" onclick="TransactionManager.openForm()">+ New Transaction</button>
+                        </div>
+                        <div class="search-bar">
+                            <input type="text" class="search-input" id="transactionSearch" placeholder="Search transactions...">
+                            <select class="filter-select" id="transactionType">
+                                <option value="">All Types</option>
+                                <option value="transfer">Transfer</option>
+                                <option value="payment">Payment</option>
+                                <option value="receipt">Receipt</option>
+                                <option value="deposit">Deposit</option>
+                                <option value="withdrawal">Withdrawal</option>
+                            </select>
+                        </div>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Reference #</th>
+                                    <th>Type</th>
+                                    <th>Description</th>
+                                    <th class="text-right">Amount</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="transactionTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- TRANSACTION DETAIL -->
+                <div id="transaction-detail" class="page">
+                    <div class="card">
+                        <div class="card-header">
+                            <div>
+                                <div class="card-title" id="detailTxnNumber">—</div>
+                                <div style="font-size:12px;color:var(--gray);margin-top:4px;" id="detailTxnDate"></div>
+                            </div>
+                            <button class="btn btn-secondary" onclick="UIManager.navigateTo('transactions')">← Back</button>
+                        </div>
+                        <div class="detail-grid">
+                            <div>
+                                <div class="detail-label">Type</div>
+                                <div class="detail-value" id="detailTxnType">—</div>
+                            </div>
+                            <div>
+                                <div class="detail-label">Amount</div>
+                                <div class="detail-value" style="font-size:20px;" id="detailTxnAmount">$0.00</div>
+                            </div>
+                            <div>
+                                <div class="detail-label">Status</div>
+                                <span class="badge badge-success" id="detailTxnStatus">completed</span>
+                            </div>
+                        </div>
+                        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px;margin-bottom:20px;">
+                            <div>
+                                <div class="detail-label">From Account</div>
+                                <div class="detail-value" id="detailTxnFromAccount">—</div>
+                            </div>
+                            <div>
+                                <div class="detail-label">To Account</div>
+                                <div class="detail-value" id="detailTxnToAccount">—</div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="detail-label">Description</div>
+                            <div class="detail-value" id="detailTxnDescription">—</div>
+                        </div>
+                        <div style="display:flex;gap:10px;margin-top:20px;">
+                            <button class="btn btn-warning"   onclick="TransactionManager.editTransaction(null)">Edit</button>
+                            <button class="btn btn-secondary" onclick="UIManager.navigateTo('transactions')">Back to List</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TRANSACTION FORM -->
+                <div id="transaction-form" class="page">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Create / Edit Transaction</div>
+                        </div>
+                        <form id="transactionForm">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Transaction Date *</label>
+                                    <input type="date" class="form-control" id="txnDate" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Transaction Type *</label>
+                                    <select class="form-control" id="txnType" required>
+                                        <option value="">Select Type</option>
+                                        <option value="transfer">Transfer</option>
+                                        <option value="payment">Payment</option>
+                                        <option value="receipt">Receipt</option>
+                                        <option value="deposit">Deposit</option>
+                                        <option value="withdrawal">Withdrawal</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">From Account *</label>
+                                    <input type="text" class="form-control" id="txnFromAccount" placeholder="e.g. 1000 - Cash - Operating" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">To Account *</label>
+                                    <input type="text" class="form-control" id="txnToAccount" placeholder="e.g. 1100 - Cash - Savings" required>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Amount *</label>
+                                    <input type="number" class="form-control" id="txnAmount" placeholder="0.00" step="0.01" min="0.01" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Currency *</label>
+                                    <select class="form-control" id="txnCurrency" required>
+                                        <option value="USD">USD - US Dollar</option>
+                                        <option value="EUR">EUR - Euro</option>
+                                        <option value="GBP">GBP - British Pound</option>
+                                        <option value="EGP">EGP - Egyptian Pound</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Description *</label>
+                                <input type="text" class="form-control" id="txnDescription" placeholder="Enter transaction description" required>
+                            </div>
+                            <div style="display:flex;gap:10px;margin-top:25px;">
+                                <button type="submit" class="btn btn-success">Save Transaction</button>
+                                <button type="button" class="btn btn-secondary" onclick="UIManager.navigateTo('transactions')">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- ============================================================
+                     INVOICES PAGES
+                     ============================================================ -->
+
+                <!-- INVOICES LIST -->
+                <div id="invoices" class="page">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Invoices</div>
+                            <button class="btn btn-primary" onclick="InvoiceManager.openForm()">+ New Invoice</button>
+                        </div>
+                        <div class="search-bar">
+                            <input type="text" class="search-input" id="invoiceSearch" placeholder="Search invoices...">
+                            <select class="filter-select" id="invoiceStatus">
+                                <option value="">All Status</option>
+                                <option value="draft">Draft</option>
+                                <option value="sent">Sent</option>
+                                <option value="paid">Paid</option>
+                                <option value="overdue">Overdue</option>
+                            </select>
+                        </div>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Invoice #</th>
+                                    <th>Customer</th>
+                                    <th>Date</th>
+                                    <th>Due Date</th>
+                                    <th class="text-right">Total</th>
+                                    <th class="text-right">Paid</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="invoiceTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- INVOICE DETAIL -->
+                <div id="invoice-detail" class="page">
+                    <div class="card">
+                        <div class="card-header">
+                            <div>
+                                <div class="card-title" id="detailInvoiceNumber">—</div>
+                                <div style="font-size:12px;color:var(--gray);margin-top:4px;">Date: <span id="detailInvoiceDate"></span></div>
+                            </div>
+                            <div class="btn-group">
+                                <button class="btn btn-info"      onclick="InvoiceManager.viewPrint(InvoiceManager._currentId)">🖨️ Print / PDF</button>
+                                <button class="btn btn-secondary" onclick="UIManager.navigateTo('invoices')">← Back</button>
+                            </div>
+                        </div>
+                        <div class="detail-grid">
+                            <div>
+                                <div class="detail-label">Customer</div>
+                                <div class="detail-value" id="detailInvoiceCustomer">—</div>
+                            </div>
+                            <div>
+                                <div class="detail-label">Status</div>
+                                <span class="badge badge-warning" id="detailInvoiceStatus">draft</span>
+                            </div>
+                            <div>
+                                <div class="detail-label">Due Date</div>
+                                <div class="detail-value" id="detailInvoiceDueDate">—</div>
+                            </div>
+                        </div>
+                        <h3 style="margin:20px 0 15px;font-size:16px;font-weight:700;">Line Items</h3>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Description</th>
+                                    <th class="text-right">Qty</th>
+                                    <th class="text-right">Unit Price</th>
+                                    <th class="text-right">Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody id="detailInvoiceLines"></tbody>
+                            <tfoot>
+                                <tr class="line-total-row">
+                                    <td colspan="3" class="text-right">Subtotal:</td>
+                                    <td class="text-right" id="detailInvoiceSubtotal">$0.00</td>
+                                </tr>
+                                <tr class="line-total-row">
+                                    <td colspan="3" class="text-right">Tax:</td>
+                                    <td class="text-right" id="detailInvoiceTax">$0.00</td>
+                                </tr>
+                                <tr class="line-total-row" style="font-size:16px;">
+                                    <td colspan="3" class="text-right">TOTAL:</td>
+                                    <td class="text-right" id="detailInvoiceTotal">$0.00</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                        <div style="background:var(--light);padding:15px;border-radius:5px;margin:20px 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:20px;transition:background 0.3s;">
+                            <div>
+                                <div class="detail-label">Amount Paid</div>
+                                <div class="detail-value" style="color:var(--success);" id="detailInvoicePaid">$0.00</div>
+                            </div>
+                            <div>
+                                <div class="detail-label">Balance Due</div>
+                                <div class="detail-value" style="color:var(--danger);" id="detailInvoiceBalance">$0.00</div>
+                            </div>
+                        </div>
+                        <div style="display:flex;gap:10px;margin-top:20px;">
+                            <button class="btn btn-success"   onclick="InvoiceManager.recordPayment()">Record Payment</button>
+                            <button class="btn btn-primary"   onclick="InvoiceManager.markSent()">Mark as Sent</button>
+                            <button class="btn btn-warning"   onclick="InvoiceManager.editInvoice(InvoiceManager._currentId)">Edit</button>
+                            <button class="btn btn-secondary" onclick="UIManager.navigateTo('invoices')">Back to List</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- INVOICE FORM -->
+                <div id="invoice-form" class="page">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Create / Edit Invoice</div>
+                        </div>
+                        <form id="invoiceForm">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Invoice #</label>
+                                    <input type="text" class="form-control" id="invNumber" readonly>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Invoice Date *</label>
+                                    <input type="date" class="form-control" id="invDate" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Due Date *</label>
+                                    <input type="date" class="form-control" id="invDueDate" required>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Customer *</label>
+                                    <input type="text" class="form-control" id="invCustomer" placeholder="Customer name" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Currency *</label>
+                                    <select class="form-control" id="invCurrency" required>
+                                        <option value="USD">USD - US Dollar</option>
+                                        <option value="EUR">EUR - Euro</option>
+                                        <option value="GBP">GBP - British Pound</option>
+                                        <option value="EGP">EGP - Egyptian Pound</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;align-items:center;margin:25px 0 15px;">
+                                <h4 style="margin:0;font-size:16px;font-weight:700;">Line Items</h4>
+                                <button type="button" class="btn btn-secondary" onclick="InvoiceManager.addLine()">+ Add Line</button>
+                            </div>
+                            <table class="line-items-table">
+                                <thead>
+                                    <tr>
+                                        <th>Description</th>
+                                        <th style="width:90px;">Qty</th>
+                                        <th style="width:130px;">Unit Price ($)</th>
+                                        <th style="width:130px;">Amount ($)</th>
+                                        <th style="width:60px;"></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="invLineItems"></tbody>
+                                <tfoot>
+                                    <tr class="line-total-row">
+                                        <td colspan="3" class="text-right">SUBTOTAL:</td>
+                                        <td><strong id="invSubtotal">$0.00</strong></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2">
+                                            <input type="number" class="form-control" id="invTaxRate" placeholder="Tax %" min="0" max="100" step="0.01" oninput="InvoiceManager.updateTotals()" style="max-width:120px;">
+                                        </td>
+                                        <td class="text-right">TAX:</td>
+                                        <td><strong id="invTaxAmount">$0.00</strong></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr class="line-total-row" style="font-size:16px;">
+                                        <td colspan="3" class="text-right">TOTAL:</td>
+                                        <td><strong id="invTotal">$0.00</strong></td>
+                                        <td></td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                            <div class="form-group" style="margin-top:20px;">
+                                <label class="form-label">Notes</label>
+                                <textarea class="form-control" id="invNotes" rows="3" placeholder="Add invoice notes or payment terms..."></textarea>
+                            </div>
+                            <div style="display:flex;gap:10px;margin-top:25px;">
+                                <button type="submit" class="btn btn-success">Save Invoice</button>
+                                <button type="button" class="btn btn-secondary" onclick="UIManager.navigateTo('invoices')">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- INVOICE PRINT / PDF PAGE -->
+                <div id="invoice-print" class="page">
+                    <div class="invoice-print-actions">
+                        <button class="btn btn-secondary" onclick="UIManager.navigateTo('invoice-detail')">← Back to Invoice</button>
+                        <button class="btn btn-info"      onclick="InvoiceManager.printInvoice()">🖨️ Print / Save as PDF</button>
+                    </div>
+                    <div class="invoice-print-wrapper">
+                        <div class="invoice-print-header">
+                            <div class="invoice-print-logo">
+                                <div class="invoice-print-logo-icon">📊</div>
+                                <div>
+                                    <div class="invoice-print-company">Accounting Co.</div>
+                                    <div class="invoice-print-company-sub">123 Business Street, New York, NY 10001<br>contact@accountingco.com · +1 (555) 000-0000</div>
+                                </div>
+                            </div>
+                            <div class="invoice-print-meta">
+                                <div class="invoice-print-title">INVOICE</div>
+                                <div class="invoice-print-number" id="printInvNumber">—</div>
+                            </div>
+                        </div>
+                        <div class="invoice-print-addresses">
+                            <div>
+                                <div class="invoice-print-address-label">Bill To</div>
+                                <div class="invoice-print-address-name" id="printCustomerName">—</div>
+                            </div>
+                            <div>
+                                <div class="invoice-print-address-label">From</div>
+                                <div class="invoice-print-address-name">Accounting Co.</div>
+                                <div class="invoice-print-address-line">123 Business Street<br>New York, NY 10001<br>contact@accountingco.com</div>
+                            </div>
+                        </div>
+                        <div class="invoice-print-dates">
+                            <div>
+                                <div class="invoice-print-dates-label">Invoice Date</div>
+                                <div class="invoice-print-dates-value" id="printInvDate">—</div>
+                            </div>
+                            <div>
+                                <div class="invoice-print-dates-label">Due Date</div>
+                                <div class="invoice-print-dates-value" id="printInvDueDate">—</div>
+                            </div>
+                            <div>
+                                <div class="invoice-print-dates-label">Status</div>
+                                <div class="invoice-print-dates-value" id="printInvStatus">—</div>
+                            </div>
+                        </div>
+                        <table class="invoice-print-table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Description</th>
+                                    <th class="text-right">Qty</th>
+                                    <th class="text-right">Unit Price</th>
+                                    <th class="text-right">Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody id="printInvoiceLines"></tbody>
+                        </table>
+                        <div class="invoice-print-totals">
+                            <div class="invoice-print-totals-box">
+                                <div class="invoice-print-totals-row">
+                                    <span>Subtotal</span><span id="printSubtotal">$0.00</span>
+                                </div>
+                                <div class="invoice-print-totals-row">
+                                    <span>Tax</span><span id="printTax">$0.00</span>
+                                </div>
+                                <div class="invoice-print-totals-row grand-total">
+                                    <span>Total</span><span id="printTotal">$0.00</span>
+                                </div>
+                                <div class="invoice-print-totals-row amount-paid">
+                                    <span>Amount Paid</span><span id="printAmountPaid">$0.00</span>
+                                </div>
+                                <div class="invoice-print-totals-row amount-due">
+                                    <span>Balance Due</span><span id="printBalanceDue">$0.00</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="invoice-print-notes">
+                            <div class="invoice-print-notes-label">Notes &amp; Payment Terms</div>
+                            <div class="invoice-print-notes-text" id="printInvNotes">Payment is due within 30 days of the invoice date.</div>
+                        </div>
+                        <div class="invoice-print-footer">
+                            Thank you for your business! · Accounting Co. · contact@accountingco.com
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RECURRING INVOICES -->
+                <div id="recurring-invoices" class="page">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Recurring Invoices</div>
+                            <button class="btn btn-primary" onclick="RecurringInvoiceManager.openForm()">+ New Template</button>
+                        </div>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Template Name</th>
+                                    <th>Customer</th>
+                                    <th>Frequency</th>
+                                    <th class="text-right">Amount</th>
+                                    <th>Next Date</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recurringTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- ============================================================
+                     CONTACTS PAGES
+                     ============================================================ -->
+
+                <!-- CONTACTS LIST -->
+                <div id="contacts" class="page">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Contacts</div>
+                            <button class="btn btn-primary" onclick="ContactManager.openForm()">+ New Contact</button>
+                        </div>
+                        <div class="search-bar">
+                            <input type="text" class="search-input" id="contactSearch" placeholder="Search by name or email...">
+                            <select class="filter-select" id="contactType">
+                                <option value="">All Types</option>
+                                <option value="customer">Customers</option>
+                                <option value="vendor">Vendors</option>
+                                <option value="employee">Employees</option>
+                                <option value="partner">Partners</option>
+                            </select>
+                        </div>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Type</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>City</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="contactTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- CONTACT DETAIL -->
+                <div id="contact-detail" class="page">
+                    <div class="card">
+                        <div class="card-header">
+                            <div>
+                                <div class="card-title" id="detailCtName">—</div>
+                                <div style="font-size:12px;color:var(--gray);margin-top:4px;" id="detailCtType"></div>
+                            </div>
+                            <button class="btn btn-secondary" onclick="UIManager.navigateTo('contacts')">← Back</button>
+                        </div>
+                        <div class="detail-grid">
+                            <div>
+                                <div class="detail-label">Email</div>
+                                <div class="detail-value" id="detailCtEmail">—</div>
+                            </div>
+                            <div>
+                                <div class="detail-label">Phone</div>
+                                <div class="detail-value" id="detailCtPhone">—</div>
+                            </div>
+                            <div>
+                                <div class="detail-label">Status</div>
+                                <span class="badge badge-success" id="detailCtStatus">active</span>
+                            </div>
+                        </div>
+                        <div style="margin-bottom:20px;">
+                            <div class="detail-label">Address</div>
+                            <div class="detail-value" id="detailCtAddress">—</div>
+                        </div>
+                        <div style="margin-bottom:20px;">
+                            <div class="detail-label">Notes</div>
+                            <div class="detail-value" id="detailCtNotes">—</div>
+                        </div>
+                        <div style="display:flex;gap:10px;margin-top:20px;">
+                            <button class="btn btn-warning"   onclick="ContactManager.editContact(ContactManager._currentId)">Edit</button>
+                            <button class="btn btn-secondary" onclick="UIManager.navigateTo('contacts')">Back to List</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CONTACT FORM -->
+                <div id="contact-form" class="page">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title" id="contactFormTitle">Create Contact</div>
+                        </div>
+                        <form id="contactForm">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Contact Name *</label>
+                                    <input type="text" class="form-control" id="ctName" placeholder="Full name" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Contact Type *</label>
+                                    <select class="form-control" id="ctType" required>
+                                        <option value="">Select Type</option>
+                                        <option value="customer">Customer</option>
+                                        <option value="vendor">Vendor</option>
+                                        <option value="employee">Employee</option>
+                                        <option value="partner">Partner</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Email *</label>
+                                    <input type="email" class="form-control" id="ctEmail" placeholder="email@example.com" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Phone</label>
+                                    <input type="tel" class="form-control" id="ctPhone" placeholder="+1 (555) 123-4567">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Address</label>
+                                <input type="text" class="form-control" id="ctAddress" placeholder="Street address">
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">City</label>
+                                    <input type="text" class="form-control" id="ctCity" placeholder="City">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">State / Province</label>
+                                    <input type="text" class="form-control" id="ctState" placeholder="State">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Postal Code</label>
+                                    <input type="text" class="form-control" id="ctPostal" placeholder="Postal Code">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Country</label>
+                                <input type="text" class="form-control" id="ctCountry" placeholder="Country">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Notes</label>
+                                <textarea class="form-control" id="ctNotes" rows="3" placeholder="Add notes about this contact..."></textarea>
+                            </div>
+                            <div style="display:flex;gap:10px;margin-top:25px;">
+                                <button type="submit" class="btn btn-success">Save Contact</button>
+                                <button type="button" class="btn btn-secondary" onclick="UIManager.navigateTo('contacts')">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- ============================================================
+                     CATEGORIES PAGES
+                     ============================================================ -->
+
+                <!-- CATEGORIES LIST -->
+                <div id="categories" class="page">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Categories</div>
+                            <button class="btn btn-primary" onclick="CategoryManager.openForm()">+ New Category</button>
+                        </div>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Type</th>
+                                    <th>GL Account</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="categoryTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- CATEGORY FORM -->
+                <div id="category-form" class="page">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title" id="categoryFormTitle">Create Category</div>
+                        </div>
+                        <form id="categoryForm">
+                            <div class="form-group">
+                                <label class="form-label">Category Name *</label>
+                                <input type="text" class="form-control" id="catName" placeholder="e.g., Office Supplies" required>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Category Type *</label>
+                                    <select class="form-control" id="catType" required>
+                                        <option value="">Select Type</option>
+                                        <option value="revenue">Revenue</option>
+                                        <option value="expense">Expense</option>
+                                        <option value="asset">Asset</option>
+                                        <option value="liability">Liability</option>
+                                        <option value="equity">Equity</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">GL Account *</label>
+                                    <input type="text" class="form-control" id="catGlAccount" placeholder="e.g., 5100 - Office Supplies Expense" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Description</label>
+                                <textarea class="form-control" id="catDescription" rows="3" placeholder="Category description..."></textarea>
+                            </div>
+                            <div style="display:flex;gap:10px;margin-top:25px;">
+                                <button type="submit" class="btn btn-success">Save Category</button>
+                                <button type="button" class="btn btn-secondary" onclick="UIManager.navigateTo('categories')">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- ============================================================
+                     CURRENCIES PAGES
+                     ============================================================ -->
+
+                <!-- CURRENCIES LIST -->
+                <div id="currencies" class="page">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Currencies</div>
+                            <button class="btn btn-primary" onclick="CurrencyManager.openForm()">+ New Currency</button>
+                        </div>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Code</th>
+                                    <th>Name</th>
+                                    <th>Symbol</th>
+                                    <th class="text-right">Exchange Rate</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="currencyTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- CURRENCY FORM -->
+                <div id="currency-form" class="page">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title" id="currencyFormTitle">Create Currency</div>
+                        </div>
+                        <form id="currencyForm">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Currency Code *</label>
+                                    <input type="text" class="form-control" id="curCode" placeholder="e.g., USD" maxlength="3" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Currency Name *</label>
+                                    <input type="text" class="form-control" id="curName" placeholder="e.g., US Dollar" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Symbol *</label>
+                                    <input type="text" class="form-control" id="curSymbol" placeholder="e.g., $" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Exchange Rate (vs base currency) *</label>
+                                <input type="number" class="form-control" id="curRate" placeholder="1.000000" step="0.000001" min="0.000001" required>
+                            </div>
+                            <div class="form-group">
+                                <label style="display:flex;align-items:center;gap:10px;font-weight:600;cursor:pointer;">
+                                    <input type="checkbox" id="curIsBase" style="width:auto;">
+                                    Set as Base Currency (1.000000 — used as reference for all conversions)
+                                </label>
+                            </div>
+                            <div style="display:flex;gap:10px;margin-top:25px;">
+                                <button type="submit" class="btn btn-success">Save Currency</button>
+                                <button type="button" class="btn btn-secondary" onclick="UIManager.navigateTo('currencies')">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- ============================================================
+                     REPORTS PAGES
+                     ============================================================ -->
+
+                <!-- REPORTS DASHBOARD -->
+                <div id="reports-dashboard" class="page">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Reports Dashboard</div>
+                            <button class="btn btn-primary" onclick="ReportManager.loadDashboard()">🔄 Refresh</button>
+                        </div>
+                        <div class="stats-grid">
+                            <div class="stat-card primary">
+                                <div class="stat-label">Total Revenue (Paid Invoices)</div>
+                                <div class="stat-value" id="rptTotalRevenue2">$0.00</div>
+                            </div>
+                            <div class="stat-card success">
+                                <div class="stat-label">Accounts Receivable</div>
+                                <div class="stat-value" id="rptTotalReceivable2">$0.00</div>
+                            </div>
+                            <div class="stat-card danger">
+                                <div class="stat-label">Total Transaction Volume</div>
+                                <div class="stat-value" id="rptTotalTransactions2">$0.00</div>
+                            </div>
+                            <div class="stat-card warning">
+                                <div class="stat-label">Posted Journal Entries</div>
+                                <div class="stat-value" id="rptPostedEntries2">0</div>
+                            </div>
+                        </div>
+                        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:15px;">
+                            <button class="btn btn-secondary" onclick="UIManager.navigateTo('financial-statements')" style="text-align:left;white-space:normal;">📊 View Financial Statements</button>
+                            <button class="btn btn-secondary" onclick="UIManager.navigateTo('transaction-reports')"  style="text-align:left;white-space:normal;">📋 View Transaction Reports</button>
+                            <button class="btn btn-secondary" onclick="UIManager.navigateTo('custom-reports')"       style="text-align:left;white-space:normal;">🔧 Custom Report Builder</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FINANCIAL STATEMENTS -->
+                <div id="financial-statements" class="page">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Financial Statements</div>
+                        </div>
+                        <div class="tabs">
+                            <button class="tab-btn active" onclick="UIManager.switchTab('tb-tab', this)">Trial Balance</button>
+                            <button class="tab-btn"        onclick="UIManager.switchTab('is-tab', this)">Income Statement</button>
+                            <button class="tab-btn"        onclick="UIManager.switchTab('bs-tab', this)">Balance Sheet</button>
+                        </div>
+
+                        <!-- Trial Balance -->
+                        <div id="tb-tab" class="tab-content active">
+                            <div style="display:flex;align-items:flex-end;gap:15px;margin-bottom:20px;flex-wrap:wrap;">
+                                <div class="form-group" style="margin:0;">
+                                    <label class="form-label">As of Date</label>
+                                    <input type="date" class="form-control" id="tbAsOfDate">
+                                </div>
+                                <button class="btn btn-primary" id="btnGenerateTB">Generate Trial Balance</button>
+                                <button class="btn btn-secondary" onclick="window.print()">🖨️ Print</button>
+                            </div>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Account</th>
+                                        <th class="text-right">Debit Balance</th>
+                                        <th class="text-right">Credit Balance</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbBody"></tbody>
+                                <tfoot>
+                                    <tr class="line-total-row">
+                                        <td>TOTALS</td>
+                                        <td class="text-right" id="tbTotalDebit">$0.00</td>
+                                        <td class="text-right" id="tbTotalCredit">$0.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="3" style="padding:10px 15px;">
+                                            <span class="balance-status balance-error" id="tbBalanceStatus">Not generated yet</span>
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+
+                        <!-- Income Statement -->
+                        <div id="is-tab" class="tab-content">
+                            <div style="display:flex;align-items:flex-end;gap:15px;margin-bottom:20px;flex-wrap:wrap;">
+                                <div class="form-group" style="margin:0;">
+                                    <label class="form-label">Start Date</label>
+                                    <input type="date" class="form-control" id="isStartDate">
+                                </div>
+                                <div class="form-group" style="margin:0;">
+                                    <label class="form-label">End Date</label>
+                                    <input type="date" class="form-control" id="isEndDate">
+                                </div>
+                                <button class="btn btn-primary" id="btnGenerateIS">Generate</button>
+                                <button class="btn btn-secondary" onclick="window.print()">🖨️ Print</button>
+                            </div>
+                            <table class="table">
+                                <tbody>
+                                    <tr><td colspan="2" style="font-weight:700;font-size:16px;padding-bottom:10px;">REVENUES</td></tr>
+                                    <tbody id="isRevenueBody"></tbody>
+                                    <tr class="line-total-row">
+                                        <td>Total Revenues</td>
+                                        <td class="text-right" id="isTotalRevenue">$0.00</td>
+                                    </tr>
+                                    <tr style="height:10px;"><td colspan="2"></td></tr>
+                                    <tr><td colspan="2" style="font-weight:700;font-size:16px;padding-bottom:10px;">EXPENSES</td></tr>
+                                    <tbody id="isExpenseBody"></tbody>
+                                    <tr class="line-total-row">
+                                        <td>Total Expenses</td>
+                                        <td class="text-right" id="isTotalExpenses">$0.00</td>
+                                    </tr>
+                                    <tr style="height:10px;"><td colspan="2"></td></tr>
+                                    <tr class="line-total-row" style="font-size:18px;">
+                                        <td>NET INCOME</td>
+                                        <td class="text-right" id="isNetIncome">$0.00</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Balance Sheet -->
+                        <div id="bs-tab" class="tab-content">
+                            <div style="display:flex;align-items:flex-end;gap:15px;margin-bottom:20px;flex-wrap:wrap;">
+                                <div class="form-group" style="margin:0;">
+                                    <label class="form-label">As of Date</label>
+                                    <input type="date" class="form-control" id="bsAsOfDate">
+                                </div>
+                                <button class="btn btn-primary" id="btnGenerateBS">Generate</button>
+                                <button class="btn btn-secondary" onclick="window.print()">🖨️ Print</button>
+                            </div>
+                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:30px;">
+                                <div>
+                                    <h4 style="font-weight:700;margin-bottom:15px;">ASSETS</h4>
+                                    <table class="table" style="margin:0;">
+                                        <tbody id="bsAssetBody"></tbody>
+                                        <tfoot>
+                                            <tr class="line-total-row">
+                                                <td>Total Assets</td>
+                                                <td class="text-right" id="bsTotalAssets">$0.00</td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                                <div>
+                                    <h4 style="font-weight:700;margin-bottom:15px;">LIABILITIES &amp; EQUITY</h4>
+                                    <h5 style="font-weight:700;margin-bottom:10px;">Liabilities</h5>
+                                    <table class="table" style="margin:0 0 15px;">
+                                        <tbody id="bsLiabilityBody"></tbody>
+                                        <tfoot>
+                                            <tr class="line-total-row">
+                                                <td>Total Liabilities</td>
+                                                <td class="text-right" id="bsTotalLiabilities">$0.00</td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                    <h5 style="font-weight:700;margin-bottom:10px;">Equity</h5>
+                                    <table class="table" style="margin:0;">
+                                        <tbody id="bsEquityBody"></tbody>
+                                        <tfoot>
+                                            <tr class="line-total-row">
+                                                <td>Total Equity</td>
+                                                <td class="text-right" id="bsTotalEquity">$0.00</td>
+                                            </tr>
+                                            <tr class="line-total-row" style="font-size:14px;">
+                                                <td>Total Liab. &amp; Equity</td>
+                                                <td class="text-right" id="bsTotalLiabEquity">$0.00</td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TRANSACTION REPORTS -->
+                <div id="transaction-reports" class="page">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Transaction Reports</div>
+                        </div>
+                        <div style="display:flex;align-items:flex-end;gap:15px;margin-bottom:20px;flex-wrap:wrap;">
+                            <div class="form-group" style="margin:0;">
+                                <label class="form-label">Start Date</label>
+                                <input type="date" class="form-control" id="trStartDate">
+                            </div>
+                            <div class="form-group" style="margin:0;">
+                                <label class="form-label">End Date</label>
+                                <input type="date" class="form-control" id="trEndDate">
+                            </div>
+                            <div class="form-group" style="margin:0;">
+                                <label class="form-label">Transaction Type</label>
+                                <select class="form-control" id="trType">
+                                    <option value="">All Types</option>
+                                    <option value="transfer">Transfer</option>
+                                    <option value="payment">Payment</option>
+                                    <option value="receipt">Receipt</option>
+                                    <option value="deposit">Deposit</option>
+                                    <option value="withdrawal">Withdrawal</option>
+                                </select>
+                            </div>
+                            <button class="btn btn-primary" id="btnGenerateTR">Generate</button>
+                            <button class="btn btn-secondary" onclick="window.print()">🖨️ Print</button>
+                        </div>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Type</th>
+                                    <th>Reference #</th>
+                                    <th>Description</th>
+                                    <th>From Account</th>
+                                    <th>To Account</th>
+                                    <th class="text-right">Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody id="trBody"></tbody>
+                            <tfoot>
+                                <tr class="line-total-row">
+                                    <td colspan="6" class="text-right">TOTAL:</td>
+                                    <td class="text-right" id="trTotalAmount">$0.00</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- CUSTOM REPORT BUILDER -->
+                <div id="custom-reports" class="page">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Custom Report Builder</div>
+                        </div>
+                        <div style="background:var(--light);padding:20px;border-radius:5px;margin-bottom:20px;transition:background 0.3s;">
+                            <h4 style="margin-bottom:15px;font-size:14px;font-weight:700;">Report Configuration</h4>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Report Name *</label>
+                                    <input type="text" class="form-control" id="crName" placeholder="e.g., Q1 Financial Summary">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Report Type *</label>
+                                    <select class="form-control" id="crType">
+                                        <option value="">Select Type</option>
+                                        <option value="trial-balance">Trial Balance</option>
+                                        <option value="income">Income Statement</option>
+                                        <option value="balance">Balance Sheet</option>
+                                        <option value="transactions">Transaction Report</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Start Date</label>
+                                    <input type="date" class="form-control" id="crStartDate">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">End Date</label>
+                                    <input type="date" class="form-control" id="crEndDate">
+                                </div>
+                            </div>
+                        </div>
+                        <div style="display:flex;gap:10px;margin-bottom:25px;">
+                            <button class="btn btn-primary" id="btnGenerateCR">Generate Custom Report</button>
+                            <button class="btn btn-secondary" onclick="document.getElementById('crName').value='';document.getElementById('crType').value='';">Reset</button>
+                        </div>
+                        <h4 style="margin-bottom:15px;font-size:14px;font-weight:700;">Saved Reports</h4>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Report Name</th>
+                                    <th>Type</th>
+                                    <th>Generated</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="savedReportsTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </main>
+        </div><!-- /.main-content -->
+    </div><!-- /.container-main -->
+
+    <!-- ============================================================
+         RECURRING INVOICE MODAL
+         ============================================================ -->
+    <div id="recurringModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title" id="recurringModalTitle">New Recurring Invoice Template</div>
+                <button class="close-btn" onclick="RecurringInvoiceManager.closeModal()">✕</button>
+            </div>
+            <form id="recurringForm">
+                <div class="form-group">
+                    <label class="form-label">Template Name *</label>
+                    <input type="text" class="form-control" id="recName" placeholder="e.g., Monthly Service Fee" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Customer *</label>
+                    <input type="text" class="form-control" id="recCustomer" placeholder="Customer name" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Frequency *</label>
+                        <select class="form-control" id="recFrequency" required>
+                            <option value="">Select Frequency</option>
+                            <option value="weekly">Weekly</option>
+                            <option value="monthly">Monthly</option>
+                            <option value="quarterly">Quarterly</option>
+                            <option value="yearly">Yearly</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Currency</label>
+                        <select class="form-control" id="recCurrency">
+                            <option value="USD">USD</option>
+                            <option value="EUR">EUR</option>
+                            <option value="GBP">GBP</option>
+                            <option value="EGP">EGP</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Amount *</label>
+                        <input type="number" class="form-control" id="recAmount" placeholder="0.00" step="0.01" min="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Start Date *</label>
+                        <input type="date" class="form-control" id="recStartDate" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea class="form-control" id="recDescription" rows="2" placeholder="Template description..."></textarea>
+                </div>
+                <div style="display:flex;gap:10px;margin-top:20px;">
+                    <button type="submit" class="btn btn-success">Save Template</button>
+                    <button type="button" class="btn btn-secondary" onclick="RecurringInvoiceManager.closeModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ============================================================
+         SCRIPTS — load order matters
+         ============================================================ -->
+    <script src="js/StorageManager.js"></script>
+    <script src="js/Validator.js"></script>
+    <script src="js/UIManager.js"></script>
+    <script src="js/DarkModeManager.js"></script>
+    <script src="js/JournalEntryManager.js"></script>
+    <script src="js/TransactionManager.js"></script>
+    <script src="js/InvoiceManager.js"></script>
+    <script src="js/RecurringInvoiceManager.js"></script>
+    <script src="js/ContactManager.js"></script>
+    <script src="js/CategoryManager.js"></script>
+    <script src="js/CurrencyManager.js"></script>
+    <script src="js/ReportManager.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
